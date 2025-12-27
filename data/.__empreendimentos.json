@@ -1,0 +1,1342 @@
+[
+  {
+    "nome": "Conviva Camboinhas",
+    "bairro": "Camboinhas",
+    "tipologia": [
+      "1q",
+      "2q"
+    ],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
+    "descricao": "Conviva | Av. Prof. Florestan Fernandes, 574 | Entrega: 2026"
+  },
+  {
+    "nome": "Reserva São Francisco",
+    "bairro": "São Francisco",
+    "tipologia": [
+      "2q",
+      "3q"
+    ],
+    "perfil": [
+      "moradia"
+    ],
+    "descricao": "Condomínio completo com lazer"
+  },
+  {
+    "nome": "Uni Home Studios",
+    "bairro": "Boa Viagem",
+    "tipologia": [
+      "studio"
+    ],
+    "perfil": [],
+    "descricao": "JPR | Rua José Maurício Ferraz, 2 | Entrega: Entregue"
+  },
+  {
+    "nome": "Brise By Conviva",
+    "bairro": "Camboinhas",
+    "tipologia": [
+      "1q"
+    ],
+    "perfil": [],
+    "descricao": "Conviva | Av. Prof. Florestan Fernandes, 75 | Entrega: 2028"
+  },
+  {
+    "nome": "Conviva Life Camboinhas",
+    "bairro": "Camboinhas",
+    "tipologia": [
+      "1q",
+      "2q"
+    ],
+    "perfil": [],
+    "descricao": "Conviva | Av. Prof. Florestan Fernandes, 630 | Entrega: Entregue"
+  },
+  {
+    "nome": "It Camboinhas",
+    "bairro": "Camboinhas",
+    "tipologia": [
+      "4q"
+    ],
+    "perfil": [],
+    "descricao": "Céu | Rua José Lobo de Medeiros, 8 | Entrega: Entregue"
+  },
+  {
+    "nome": "Nice",
+    "bairro": "Camboinhas",
+    "tipologia": [
+      "4q"
+    ],
+    "perfil": [],
+    "descricao": "Tresor | Rua Jayme Bittencourt | Entrega: a confirmar"
+  },
+  {
+    "nome": "Oceanside",
+    "bairro": "Camboinhas",
+    "tipologia": [
+      "1q",
+      "3q"
+    ],
+    "perfil": [],
+    "descricao": "Wrobel | Av. Dr. Geraldo de Melo Ourivio, 1153 | Entrega: Entregue"
+  },
+  {
+    "nome": "Oásis Resort",
+    "bairro": "Camboinhas",
+    "tipologia": [
+      "2q",
+      "4q"
+    ],
+    "perfil": [],
+    "descricao": "PDG | Av. Prof. Florestan Fernandes, 1036 | Entrega: Entregue"
+  },
+  {
+    "nome": "Trópico Camboinhas",
+    "bairro": "Camboinhas",
+    "tipologia": [
+      "3q",
+      "4q"
+    ],
+    "perfil": [],
+    "descricao": "Tecconstru | Av. Prof. Florestan Fernandes, 1 | Entrega: 2026"
+  },
+  {
+    "nome": "Wave Exclusive",
+    "bairro": "Camboinhas",
+    "tipologia": [
+      "1q",
+      "4q"
+    ],
+    "perfil": [],
+    "descricao": "Itaíba | Av. Dr. Geraldo de Melo Ourivio, 502 | Entrega: Entregue"
+  },
+  {
+    "nome": "Caminhos da Guanabara",
+    "bairro": "Centro",
+    "tipologia": [
+      "1q",
+      "2q"
+    ],
+    "perfil": [],
+    "descricao": "Cury | Rua Cel PM Francisco Spargoli Rocha | Entrega: 2028"
+  },
+  {
+    "nome": "Green Life",
+    "bairro": "Centro",
+    "tipologia": [
+      "2q"
+    ],
+    "perfil": [],
+    "descricao": "Novolar | Avenida Feliciano Sodré, 282 | Entrega: 2027"
+  },
+  {
+    "nome": "Namas Smart Living",
+    "bairro": "Centro",
+    "tipologia": [
+      "studio"
+    ],
+    "perfil": [],
+    "descricao": "Falves | Rua São Sebastião, 30 | Entrega: Entregue"
+  },
+  {
+    "nome": "Rio Branco 220",
+    "bairro": "Centro",
+    "tipologia": [
+      "1q",
+      "2q"
+    ],
+    "perfil": [],
+    "descricao": "Cury | Avenida Visconde do Rio Branco, 220 | Entrega: 2026"
+  },
+  {
+    "nome": "The Pier Residencial",
+    "bairro": "Centro",
+    "tipologia": [
+      "1q",
+      "2q",
+      "3q"
+    ],
+    "perfil": [],
+    "descricao": "Cury | Rua Projetada, 1 | Entrega: a confirmar"
+  },
+  {
+    "nome": "Mediterrâneo",
+    "bairro": "Charitas",
+    "tipologia": [
+      "3q",
+      "4q"
+    ],
+    "perfil": [],
+    "descricao": "Soter | Rua Doutor Armando Lopes, 23 | Entrega: Entregue"
+  },
+  {
+    "nome": "Sou Mais Charitas",
+    "bairro": "Charitas",
+    "tipologia": [
+      "studio"
+    ],
+    "perfil": [],
+    "descricao": "Habitare | Rua Juiz Alberto Nader, 11 | Entrega: 2027"
+  },
+  {
+    "nome": "Sou Mais+ Wellness Charitas",
+    "bairro": "Charitas",
+    "tipologia": [
+      "1q",
+      "2q"
+    ],
+    "perfil": [],
+    "descricao": "Habitare | Rua Santa Cândida, 59 | Entrega: a confirmar"
+  },
+  {
+    "nome": "Upside Charitas",
+    "bairro": "Charitas",
+    "tipologia": [
+      "2q",
+      "3q"
+    ],
+    "perfil": [],
+    "descricao": "Elvas | Rua Juiz Alberto Nader | Entrega: 2028"
+  },
+  {
+    "nome": "Meu Crescer Niterói Bosque Residence",
+    "bairro": "Fonseca",
+    "tipologia": [
+      "1q",
+      "2q"
+    ],
+    "perfil": [],
+    "descricao": "Crescer | Rua Desembargador Lima Castro, 245 | Entrega: 2028"
+  },
+  {
+    "nome": "Niterói Open",
+    "bairro": "Fonseca",
+    "tipologia": [
+      "1q",
+      "3q"
+    ],
+    "perfil": [],
+    "descricao": "GPCON | Rua Antônio Silva, 7 | Entrega: 2026"
+  },
+  {
+    "nome": "Soul Fonseca",
+    "bairro": "Fonseca",
+    "tipologia": [
+      "2q"
+    ],
+    "perfil": [],
+    "descricao": "RDR | Avenida Professor João Brasil, 610 | Entrega: 2026"
+  },
+  {
+    "nome": "141 Living",
+    "bairro": "Icaraí",
+    "tipologia": [
+      "1q",
+      "2q"
+    ],
+    "perfil": [],
+    "descricao": "Céu | Rua Mem de Sá, 141 | Entrega: 2026"
+  },
+  {
+    "nome": "Algarve Residencial",
+    "bairro": "Icaraí",
+    "tipologia": [
+      "2q",
+      "3q"
+    ],
+    "perfil": [],
+    "descricao": "Bacos | Rua Álvares de Azevedo, 180 | Entrega: Entregue"
+  },
+  {
+    "nome": "Attrium",
+    "bairro": "Icaraí",
+    "tipologia": [
+      "4q"
+    ],
+    "perfil": [],
+    "descricao": "Soter | Rua Presidente Backer, 250 | Entrega: 2026"
+  },
+  {
+    "nome": "Connect Icaraí",
+    "bairro": "Icaraí",
+    "tipologia": [
+      "2q",
+      "3q"
+    ],
+    "perfil": [],
+    "descricao": "ProArt | Rua Doutor Carlos Halfeld, 9 | Entrega: Entregue"
+  },
+  {
+    "nome": "Home Boutique",
+    "bairro": "Icaraí",
+    "tipologia": [
+      "3q",
+      "4q"
+    ],
+    "perfil": [],
+    "descricao": "Tegra | Rua Comendador Queiroz, 80 | Entrega: Entregue"
+  },
+  {
+    "nome": "In Icaraí",
+    "bairro": "Icaraí",
+    "tipologia": [
+      "studio"
+    ],
+    "perfil": [],
+    "descricao": "Chead | Av. Almirante Ari Parreiras, 88 | Entrega: 2027"
+  },
+  {
+    "nome": "Pulse by Soter ",
+    "bairro": "Icaraí",
+    "tipologia": [
+      "2q",
+      "3q",
+      "4q"
+    ],
+    "perfil": [],
+    "descricao": "Soter | Rua Presidente Backer, 88 | Entrega: 2028"
+  },
+  {
+    "nome": "Maestro",
+    "bairro": "Icaraí",
+    "tipologia": [
+      "3q",
+      "4q"
+    ],
+    "perfil": [],
+    "descricao": "Soter | Rua Dr. Herotides de Oliveira, 23 | Entrega: 2028"
+  },
+  {
+    "nome": "Mb Loft",
+    "bairro": "Icaraí",
+    "tipologia": [
+      "loft"
+    ],
+    "perfil": [],
+    "descricao": "TecConstrut | Rua Mariz e Barros, 225 | Entrega: Entregue"
+  },
+  {
+    "nome": "Mok 132",
+    "bairro": "Icaraí",
+    "tipologia": [
+      "3q"
+    ],
+    "perfil": [],
+    "descricao": "Falves | Travessa Francisco Dutra, 132 | Entrega: 2028"
+  },
+  {
+    "nome": "Neo Design",
+    "bairro": "Icaraí",
+    "tipologia": [
+      "studio"
+    ],
+    "perfil": [],
+    "descricao": "Elvas | Rua Álvares de Azevedo, 239 | Entrega: 2027"
+  },
+  {
+    "nome": "OKA Studios Icaraí",
+    "bairro": "Icaraí",
+    "tipologia": [
+      "studio"
+    ],
+    "perfil": [],
+    "descricao": "Bacos | Rua Doutor Tavares de Macedo, 35 | Entrega: 2028"
+  },
+  {
+    "nome": "Origem Residencial",
+    "bairro": "Icaraí",
+    "tipologia": [
+      "1q",
+      "2q",
+      "3q"
+    ],
+    "perfil": [],
+    "descricao": "Soter | Rua Álvares de Azevedo, 185 | Entrega: 2028"
+  },
+  {
+    "nome": "PB74",
+    "bairro": "Icaraí",
+    "tipologia": [
+      "studio"
+    ],
+    "perfil": [],
+    "descricao": "Bacos | Rua Presidente Backer, 74 | Entrega: a confirmar"
+  },
+  {
+    "nome": "Seven Avenue",
+    "bairro": "Icaraí",
+    "tipologia": [
+      "2q",
+      "3q"
+    ],
+    "perfil": [],
+    "descricao": "Bacos | Avenida Sete de Setembro, 56 | Entrega: 2026"
+  },
+  {
+    "nome": "Sou Mais Icaraí",
+    "bairro": "Icaraí",
+    "tipologia": [
+      "studio"
+    ],
+    "perfil": [],
+    "descricao": "Habitare | Rua Prof. A. P. Q. de Moura, 110 | Entrega: Entregue"
+  },
+  {
+    "nome": "Stage",
+    "bairro": "Icaraí",
+    "tipologia": [
+      "1q",
+      "2q"
+    ],
+    "perfil": [],
+    "descricao": "ProArt | Rua Ator Paulo Gustavo, 368 | Entrega: 2029"
+  },
+  {
+    "nome": "Sunset Icaraí",
+    "bairro": "Icaraí",
+    "tipologia": [
+      "1q",
+      "2q",
+      "3q"
+    ],
+    "perfil": [],
+    "descricao": "ProArt | Rua Joaquim Távora, 80 | Entrega: 2025"
+  },
+  {
+    "nome": "Terramarine",
+    "bairro": "Icaraí",
+    "tipologia": [
+      "2q",
+      "3q"
+    ],
+    "perfil": [],
+    "descricao": "João Fortes | Rua Joaquim Távora, 138 | Entrega: 2025"
+  },
+  {
+    "nome": "The Edge",
+    "bairro": "Icaraí",
+    "tipologia": [
+      "3q",
+      "4q"
+    ],
+    "perfil": [],
+    "descricao": "Soter | Praia de Icaraí, 63 | Entrega: Entregue"
+  },
+  {
+    "nome": "Up Icaraí Studio",
+    "bairro": "Icaraí",
+    "tipologia": [
+      "studio"
+    ],
+    "perfil": [],
+    "descricao": "ProArt | Rua Presidente Backer, 128 | Entrega: 2026"
+  },
+  {
+    "nome": "Íon Icaraí",
+    "bairro": "Icaraí",
+    "tipologia": [
+      "studio",
+      "2q"
+    ],
+    "perfil": [],
+    "descricao": "Soter | Travessa Capitão Zeferino, 90 | Entrega: 2027"
+  },
+  {
+    "nome": "Conviva Icaraí ",
+    "bairro": "Icaraí",
+    "tipologia": [
+      "studio"
+    ],
+    "perfil": [],
+    "descricao": "Conviva | Rua Mariz e Barros, 34 | Entrega: a confirmar"
+  },
+  {
+    "nome": "Conviva Life Ingá",
+    "bairro": "Ingá",
+    "tipologia": [
+      "1q",
+      "2q"
+    ],
+    "perfil": [],
+    "descricao": "Conviva | Rua Doutor Paulo Alves, 78 | Entrega: 2027"
+  },
+  {
+    "nome": "Log 132",
+    "bairro": "Ingá",
+    "tipologia": [
+      "lofts"
+    ],
+    "perfil": [],
+    "descricao": "MRC | Praça Doutor Nilo Peçanha, 132 | Entrega: Entregue"
+  },
+  {
+    "nome": "Tarsila",
+    "bairro": "Ingá",
+    "tipologia": [
+      "3q",
+      "4q"
+    ],
+    "perfil": [],
+    "descricao": "Soter | Rua Doutor Pereira Nunes, 132 | Entrega: Entregue"
+  },
+  {
+    "nome": "Atlantis",
+    "bairro": "Itacoatiara",
+    "tipologia": [
+      "2q",
+      "3q"
+    ],
+    "perfil": [],
+    "descricao": "Soter | Rua Scylla Souza Ribeiro, 57 | Entrega: Entregue"
+  },
+  {
+    "nome": "Carpe Diem",
+    "bairro": "Itacoatiara",
+    "tipologia": [
+      "2q",
+      "4q"
+    ],
+    "perfil": [],
+    "descricao": "Gafisa | Estrada Francisco da Cruz Nunes, 11722 | Entrega: Entregue"
+  },
+  {
+    "nome": "Costa Bella",
+    "bairro": "Itacoatiara",
+    "tipologia": [
+      "2q",
+      "3q"
+    ],
+    "perfil": [],
+    "descricao": "União | Rua Samuel Wainer Filho, 6 | Entrega: Entregue"
+  },
+  {
+    "nome": "Fiori de Itacoatiara",
+    "bairro": "Itacoatiara",
+    "tipologia": [
+      "2q",
+      "4q"
+    ],
+    "perfil": [],
+    "descricao": "CALL | Rua Matias Sandri, 813 | Entrega: Entregue"
+  },
+  {
+    "nome": "Giardino Di Capri",
+    "bairro": "Itacoatiara",
+    "tipologia": [
+      "2q",
+      "4q"
+    ],
+    "perfil": [],
+    "descricao": "Madel | Rua Matias Sandri, 100 | Entrega: Entregue"
+  },
+  {
+    "nome": "Ilhas do Sol",
+    "bairro": "Itacoatiara",
+    "tipologia": [
+      "3q",
+      "5q"
+    ],
+    "perfil": [],
+    "descricao": "Equipe | Rua Matias Sandri, 1035 | Entrega: Entregue"
+  },
+  {
+    "nome": "Jardin de Plage",
+    "bairro": "Itacoatiara",
+    "tipologia": [
+      "2q",
+      "3q"
+    ],
+    "perfil": [],
+    "descricao": "VL | Rua Samuel Wainer Filho, 1188 | Entrega: Entregue"
+  },
+  {
+    "nome": "La Brise Itacoatiara Residence",
+    "bairro": "Itacoatiara",
+    "tipologia": [
+      "2q",
+      "3q"
+    ],
+    "perfil": [],
+    "descricao": "VL | Rua Samuel Wainer Filho, 611 | Entrega: Entregue"
+  },
+  {
+    "nome": "Sou Mais+ Itacoa",
+    "bairro": "Itacoatiara",
+    "tipologia": [
+      "studio"
+    ],
+    "perfil": [],
+    "descricao": "Habitare | Rua Samuel Wainer Filho, 900 | Entrega: 2028"
+  },
+  {
+    "nome": "Wind Itacoatiara",
+    "bairro": "Itacoatiara",
+    "tipologia": [
+      "1q",
+      "3q"
+    ],
+    "perfil": [],
+    "descricao": "Metta | Estrada Francisco da Cruz Nunes, 11412 | Entrega: Entregue"
+  },
+  {
+    "nome": "Átria Residencial",
+    "bairro": "Itacoatiara",
+    "tipologia": [
+      "3q"
+    ],
+    "perfil": [],
+    "descricao": "CEU | Estrada Francisco da Cruz Nunes, 11699 | Entrega: Entregue"
+  },
+  {
+    "nome": "Jardim Itacoa",
+    "bairro": "Itaipu",
+    "tipologia": [
+      "1q",
+      "2q",
+      "3q"
+    ],
+    "perfil": [],
+    "descricao": "Medeiros | Est. Francisco da Cruz Nunes, 10512 | Entrega: 2028"
+  },
+  {
+    "nome": "Jardin Di Grazielle",
+    "bairro": "Itaipu",
+    "tipologia": [
+      "2q",
+      "3q"
+    ],
+    "perfil": [],
+    "descricao": "4MX | Rua Madre Mary Marceline, 278 | Entrega: 2027"
+  },
+  {
+    "nome": "Jasmin",
+    "bairro": "Itaipu",
+    "tipologia": [
+      "3q",
+      "4q"
+    ],
+    "perfil": [],
+    "descricao": "— | Rua Ignez Peixoto, 517 | Entrega: Entregue"
+  },
+  {
+    "nome": "Lake View",
+    "bairro": "Itaipu",
+    "tipologia": [
+      "2q"
+    ],
+    "perfil": [],
+    "descricao": "ProArt | Rua Escrivão Cezar March, 302 | Entrega: Entregue"
+  },
+  {
+    "nome": "Ocean Hill",
+    "bairro": "Itaipu",
+    "tipologia": [
+      "2q"
+    ],
+    "perfil": [],
+    "descricao": "Gacon | Estrada Francisco da Cruz Nunes, 9190 | Entrega: Entregue"
+  },
+  {
+    "nome": "Ocean Top",
+    "bairro": "Itaipu",
+    "tipologia": [
+      "1q",
+      "2q"
+    ],
+    "perfil": [],
+    "descricao": "ProArt | Ocean Top | Entrega: Entregue"
+  },
+  {
+    "nome": "Portal de Itaipu",
+    "bairro": "Itaipu",
+    "tipologia": [
+      "2q",
+      "3q"
+    ],
+    "perfil": [],
+    "descricao": "Pinto de Almeida | Estrada Francisco da Cruz Nunes, 2800 | Entrega: Entregue"
+  },
+  {
+    "nome": "Porto Oceânico",
+    "bairro": "Itaipu",
+    "tipologia": [
+      "2q",
+      "3q"
+    ],
+    "perfil": [],
+    "descricao": "Equipe | Rua Leila Souza Putilini, 147 | Entrega: Entregue"
+  },
+  {
+    "nome": "Praias Oceânicas",
+    "bairro": "Itaipu",
+    "tipologia": [
+      "3q"
+    ],
+    "perfil": [],
+    "descricao": "Bacos | Estrada Francisco da Cruz Nunes | Entrega: Entregue"
+  },
+  {
+    "nome": "Reserva do Grotão",
+    "bairro": "Itaipu",
+    "tipologia": [
+      "2q",
+      "3q"
+    ],
+    "perfil": [],
+    "descricao": "Equipe | Rua Dos Pavões | Entrega: Entregue"
+  },
+  {
+    "nome": "Rocca Maggiore",
+    "bairro": "Itaipu",
+    "tipologia": [
+      "2q"
+    ],
+    "perfil": [],
+    "descricao": "União | Rua João de Souza Castelo, 313 | Entrega: Entregue"
+  },
+  {
+    "nome": "Saint Fábio",
+    "bairro": "Itaipu",
+    "tipologia": [
+      "3q",
+      "4q"
+    ],
+    "perfil": [],
+    "descricao": "Gacon | Rua São Fábio, 40 | Entrega: Entregue"
+  },
+  {
+    "nome": "Solar da Serra",
+    "bairro": "Itaipu",
+    "tipologia": [
+      "3q"
+    ],
+    "perfil": [],
+    "descricao": "Gacon | Rua Roberto Peixoto, 1 | Entrega: Entregue"
+  },
+  {
+    "nome": "Vila Gaudí",
+    "bairro": "Itaipu",
+    "tipologia": [
+      "2q",
+      "3q"
+    ],
+    "perfil": [],
+    "descricao": "Equipe | Rua Vereador Agostinho de Paula Santos | Entrega: Entregue"
+  },
+  {
+    "nome": "Vila Santo Antônio",
+    "bairro": "Itaipu",
+    "tipologia": [
+      "4q"
+    ],
+    "perfil": [],
+    "descricao": "Ramabe | Rua Dos Pavões | Entrega: Entregue"
+  },
+  {
+    "nome": "Duetto",
+    "bairro": "Jardim Icaraí",
+    "tipologia": [
+      "1q",
+      "3q"
+    ],
+    "perfil": [],
+    "descricao": "Fernandes Maciel | Rua Santa Rosa, 82 | Entrega: Entregue"
+  },
+  {
+    "nome": "Essence",
+    "bairro": "Jardim Icaraí",
+    "tipologia": [
+      "3q",
+      "4q"
+    ],
+    "perfil": [],
+    "descricao": "Fernandes Maciel | Rua Presidente João Pessoa, 350 | Entrega: Entregue"
+  },
+  {
+    "nome": "MUD 333",
+    "bairro": "Jardim Icaraí",
+    "tipologia": [
+      "1q",
+      "4q"
+    ],
+    "perfil": [],
+    "descricao": "Soter | Rua Professor Miguel Couto, 333 | Entrega: Entregue"
+  },
+  {
+    "nome": "SD40",
+    "bairro": "Jardim Icaraí",
+    "tipologia": [
+      "2q",
+      "3q"
+    ],
+    "perfil": [],
+    "descricao": "Fernandes Maciel | Rua Santos Dumont, 40 | Entrega: 2025"
+  },
+  {
+    "nome": "Portal do Verde",
+    "bairro": "Maria Paula",
+    "tipologia": [
+      "1q",
+      "2q"
+    ],
+    "perfil": [],
+    "descricao": "Pinto de Almeida | Estrada Caetano Monteiro, 4009 | Entrega: a confirmar"
+  },
+  {
+    "nome": "Portal do Sol",
+    "bairro": "Matapaca",
+    "tipologia": [
+      "—"
+    ],
+    "perfil": [],
+    "descricao": "Pinto de Almeida | Estrada Caetano Monteiro, 4087 | Entrega: Entregue"
+  },
+  {
+    "nome": "Chambord Grimaldi",
+    "bairro": "Pendotiba",
+    "tipologia": [
+      "2q"
+    ],
+    "perfil": [],
+    "descricao": "União | Estrada Caetano Monteiro, 3825 | Entrega: a confirmar"
+  },
+  {
+    "nome": "Chácara Pendotiba",
+    "bairro": "Pendotiba",
+    "tipologia": [
+      "2q",
+      "4q"
+    ],
+    "perfil": [],
+    "descricao": "Pinto de Almeida | Estrada Caetano Monteiro, 3910 | Entrega: a confirmar"
+  },
+  {
+    "nome": "Fazenda Fillomena",
+    "bairro": "Pendotiba",
+    "tipologia": [
+      "lotes"
+    ],
+    "perfil": [],
+    "descricao": "ANASA | Estrada Monan Grande, 820 | Entrega: Pronto"
+  },
+  {
+    "nome": "Great Place",
+    "bairro": "Pendotiba",
+    "tipologia": [
+      "2q",
+      "3q"
+    ],
+    "perfil": [],
+    "descricao": "JPR | Rua João Batista, 450 | Entrega: a confirmar"
+  },
+  {
+    "nome": "Portal de Pendotiba",
+    "bairro": "Pendotiba",
+    "tipologia": [
+      "2q",
+      "3q"
+    ],
+    "perfil": [],
+    "descricao": "Pinto de Almeida | Estrada Caetano Monteiro, 1032 | Entrega: a confirmar"
+  },
+  {
+    "nome": "Viva Pendotiba",
+    "bairro": "Pendotiba",
+    "tipologia": [
+      "2q",
+      "3q"
+    ],
+    "perfil": [],
+    "descricao": "Pinto de Almeida | Estrada Caetano Monteiro, 391 | Entrega: a confirmar"
+  },
+  {
+    "nome": "Back Art",
+    "bairro": "Piratininga",
+    "tipologia": [
+      "1q",
+      "3q"
+    ],
+    "perfil": [],
+    "descricao": "Céu | Av. Almirante Tamandaré, 51 | Entrega: Entregue"
+  },
+  {
+    "nome": "Bettina",
+    "bairro": "Piratininga",
+    "tipologia": [
+      "1q",
+      "2q"
+    ],
+    "perfil": [],
+    "descricao": "PA5 | Rua Pietro Farsoun, 158 | Entrega: Entregue"
+  },
+  {
+    "nome": "Camino Del Mare",
+    "bairro": "Piratininga",
+    "tipologia": [
+      "1q",
+      "3q"
+    ],
+    "perfil": [],
+    "descricao": "Equipe | Rua Doutor João Valentim Tavares, 69 | Entrega: Entregue"
+  },
+  {
+    "nome": "Conviva Piratininga",
+    "bairro": "Piratininga",
+    "tipologia": [
+      "studio"
+    ],
+    "perfil": [],
+    "descricao": "Conviva | Rua Lisandro Motta, 1 | Entrega: 2026"
+  },
+  {
+    "nome": "Due Loft",
+    "bairro": "Piratininga",
+    "tipologia": [
+      "1q",
+      "2q"
+    ],
+    "perfil": [],
+    "descricao": "Céu | Rua Doutor Ernani Luiz da Cunha, 268 | Entrega: Entregue"
+  },
+  {
+    "nome": "Freedom Styles",
+    "bairro": "Piratininga",
+    "tipologia": [
+      "2q",
+      "3q"
+    ],
+    "perfil": [],
+    "descricao": "ProArt | Rua Com. Manuel de Azevedo Falcão, 135 | Entrega: Entregue"
+  },
+  {
+    "nome": "Gael",
+    "bairro": "Piratininga",
+    "tipologia": [
+      "2q",
+      "3q"
+    ],
+    "perfil": [],
+    "descricao": "PA5 | Rua Canajé Malta, 57 | Entrega: 2028"
+  },
+  {
+    "nome": "HomyCo.",
+    "bairro": "Piratininga",
+    "tipologia": [
+      "1q",
+      "2q"
+    ],
+    "perfil": [],
+    "descricao": "Céu | Rua Milton da Rocha Soares, 6 | Entrega: Entregue"
+  },
+  {
+    "nome": "Isla Único",
+    "bairro": "Piratininga",
+    "tipologia": [
+      "3q",
+      "4q"
+    ],
+    "perfil": [],
+    "descricao": "Equipe | Praia Piratininga, 500 | Entrega: Entregue"
+  },
+  {
+    "nome": "Jardim Piratininga",
+    "bairro": "Piratininga",
+    "tipologia": [
+      "3q"
+    ],
+    "perfil": [],
+    "descricao": "Céu | Rua Doutor João Valentim Tavares, 33 | Entrega: Entregue"
+  },
+  {
+    "nome": "Mare Blu",
+    "bairro": "Piratininga",
+    "tipologia": [
+      "2q",
+      "3q"
+    ],
+    "perfil": [],
+    "descricao": "VL | Rua Doutor Celso Dias Gomes, 161 | Entrega: Entregue"
+  },
+  {
+    "nome": "Maren By RAMABE",
+    "bairro": "Piratininga",
+    "tipologia": [
+      "1q",
+      "2q"
+    ],
+    "perfil": [],
+    "descricao": "RAMABE | Rua Comendador Thomaz Lima, 51 | Entrega: 2028"
+  },
+  {
+    "nome": "Marina",
+    "bairro": "Piratininga",
+    "tipologia": [
+      "2q",
+      "4q"
+    ],
+    "perfil": [],
+    "descricao": "Itaíba | Av. Almirante Tamandaré, 3394 | Entrega: 2026"
+  },
+  {
+    "nome": "Marino",
+    "bairro": "Piratininga",
+    "tipologia": [
+      "2q",
+      "3q"
+    ],
+    "perfil": [],
+    "descricao": "PDG | Av. Almirante Tamandaré, 4400 | Entrega: Entregue"
+  },
+  {
+    "nome": "Nirvana Praia Boutique",
+    "bairro": "Piratininga",
+    "tipologia": [
+      "2q",
+      "4q"
+    ],
+    "perfil": [],
+    "descricao": "ProArt | Rua Jorn. Prudêncio Luiz F. Travassos, 49 | Entrega: Entregue"
+  },
+  {
+    "nome": "Nole",
+    "bairro": "Piratininga",
+    "tipologia": [
+      "1q"
+    ],
+    "perfil": [],
+    "descricao": "Falves | Rua Professor Manoel José Ferreira, 141 | Entrega: Entregue"
+  },
+  {
+    "nome": "Olivier",
+    "bairro": "Piratininga",
+    "tipologia": [
+      "4q"
+    ],
+    "perfil": [],
+    "descricao": "Tresor | Rua Dr. Abdo Abi-Ramia, 91 | Entrega: a confirmar"
+  },
+  {
+    "nome": "Ouro Verde",
+    "bairro": "Piratininga",
+    "tipologia": [
+      "1q",
+      "3q"
+    ],
+    "perfil": [],
+    "descricao": "Prêmio | Estrada Frei Orlando, 566 | Entrega: Entregue"
+  },
+  {
+    "nome": "Porto Al Mare",
+    "bairro": "Piratininga",
+    "tipologia": [
+      "1q",
+      "3q"
+    ],
+    "perfil": [],
+    "descricao": "União | Rua Doutor Celso Dias Gomes, 80 | Entrega: Entregue"
+  },
+  {
+    "nome": "Punta Del Mar",
+    "bairro": "Piratininga",
+    "tipologia": [
+      "3q",
+      "4q"
+    ],
+    "perfil": [],
+    "descricao": "Itaíba | Rua Mar. Raul de Albuquerque, 42 | Entrega: Entregue"
+  },
+  {
+    "nome": "Ravello Residenziale",
+    "bairro": "Piratininga",
+    "tipologia": [
+      "2q",
+      "3q"
+    ],
+    "perfil": [],
+    "descricao": "Itaíba | Rua Roma, 360 | Entrega: Entregue"
+  },
+  {
+    "nome": "Scenarium",
+    "bairro": "Piratininga",
+    "tipologia": [
+      "3q",
+      "4q"
+    ],
+    "perfil": [],
+    "descricao": "LRM | Av. Almirante Tamandaré, 2866 | Entrega: 2026"
+  },
+  {
+    "nome": "Solaris",
+    "bairro": "Piratininga",
+    "tipologia": [
+      "3q",
+      "4q"
+    ],
+    "perfil": [],
+    "descricao": "Equipe | Rua Manuel Pacheco de Carvalho, 147 | Entrega: Entregue"
+  },
+  {
+    "nome": "Surf Beach Residence",
+    "bairro": "Piratininga",
+    "tipologia": [
+      "3q",
+      "4q"
+    ],
+    "perfil": [],
+    "descricao": "Itaíba | Av. Almirante Tamandaré, 171 | Entrega: Entregue"
+  },
+  {
+    "nome": "TAO",
+    "bairro": "Piratininga",
+    "tipologia": [
+      "2q",
+      "4q"
+    ],
+    "perfil": [],
+    "descricao": "Céu | Rua Antônio Augusto da Paz, 17 | Entrega: 2027"
+  },
+  {
+    "nome": "Tesla Design",
+    "bairro": "Piratininga",
+    "tipologia": [
+      "2q",
+      "3q"
+    ],
+    "perfil": [],
+    "descricao": "Céu | Av. Almirante Tamandaré, 57 | Entrega: Entregue"
+  },
+  {
+    "nome": "Tre Amici",
+    "bairro": "Piratininga",
+    "tipologia": [
+      "2q",
+      "3q"
+    ],
+    "perfil": [],
+    "descricao": "Construtora Medeiros | Rua Jorn. Francisco Rodrigues de Miranda, 71 | Entrega: Entregue"
+  },
+  {
+    "nome": "Uno Loft",
+    "bairro": "Piratininga",
+    "tipologia": [
+      "lofts"
+    ],
+    "perfil": [],
+    "descricao": "Céu | Rua Pietro Farsoun, 87 | Entrega: Entregue"
+  },
+  {
+    "nome": "Villa Di Capri",
+    "bairro": "Piratininga",
+    "tipologia": [
+      "2q"
+    ],
+    "perfil": [],
+    "descricao": "Construtora Medeiros | Rua Doutor Antônio Vaz Cavalcanti, 107 | Entrega: Entregue"
+  },
+  {
+    "nome": "Viña Del Mar",
+    "bairro": "Piratininga",
+    "tipologia": [
+      "2q"
+    ],
+    "perfil": [],
+    "descricao": "Ramabe | Rua Orestes Barbosa, 116 | Entrega: Entregue"
+  },
+  {
+    "nome": "Wind Oceânica",
+    "bairro": "Piratininga",
+    "tipologia": [
+      "1q",
+      "2q",
+      "3q"
+    ],
+    "perfil": [],
+    "descricao": "Meta | Rua Dra. Namir Peralta, 113 | Entrega: 2028"
+  },
+  {
+    "nome": "Wind Piratininga",
+    "bairro": "Piratininga",
+    "tipologia": [
+      "1q",
+      "3q"
+    ],
+    "perfil": [],
+    "descricao": "Metta | Rua Raul Corrêa de Araújo, Lt. 20 | Entrega: 2026"
+  },
+  {
+    "nome": "Nomade ",
+    "bairro": "Piratininga",
+    "tipologia": [
+      "studio"
+    ],
+    "perfil": [],
+    "descricao": "Céu | Rua Antônio Augusto da Paz | Entrega: 2028"
+  },
+  {
+    "nome": "Benvivere",
+    "bairro": "Santa Rosa",
+    "tipologia": [
+      "2q",
+      "3q"
+    ],
+    "perfil": [],
+    "descricao": "JPR | Rua Siqueira Campos, 55 | Entrega: Entregue"
+  },
+  {
+    "nome": "Calle Sardegna",
+    "bairro": "Santa Rosa",
+    "tipologia": [
+      "2q",
+      "3q"
+    ],
+    "perfil": [],
+    "descricao": "LRM | Rua Doutor Sardinha, 183 | Entrega: Entregue"
+  },
+  {
+    "nome": "Dijon",
+    "bairro": "Santa Rosa",
+    "tipologia": [
+      "2q"
+    ],
+    "perfil": [],
+    "descricao": "Bacos | Rua Doutor Sardinha, 207 | Entrega: Entregue"
+  },
+  {
+    "nome": "Eldorado II",
+    "bairro": "Santa Rosa",
+    "tipologia": [
+      "2q",
+      "3q"
+    ],
+    "perfil": [],
+    "descricao": "Pinto de Almeida | Rua Professor Otacílio, 133 | Entrega: Entregue"
+  },
+  {
+    "nome": "Flow Santa Rosa",
+    "bairro": "Santa Rosa",
+    "tipologia": [
+      "1q",
+      "2q"
+    ],
+    "perfil": [],
+    "descricao": "Cury | Rua Doutor Mario Vianna, 451 | Entrega: 2025"
+  },
+  {
+    "nome": "Jardim dos Manacas",
+    "bairro": "Santa Rosa",
+    "tipologia": [
+      "1q",
+      "2q"
+    ],
+    "perfil": [],
+    "descricao": "ProArt | Rua Doutor Sardinha, 164 | Entrega: 2027"
+  },
+  {
+    "nome": "Liv 360º",
+    "bairro": "Santa Rosa",
+    "tipologia": [
+      "2q",
+      "3q"
+    ],
+    "perfil": [],
+    "descricao": "Debens | Rua Doutor Sardinha, 210 | Entrega: Entregue"
+  },
+  {
+    "nome": "Monet",
+    "bairro": "Santa Rosa",
+    "tipologia": [
+      "2q",
+      "3q"
+    ],
+    "perfil": [],
+    "descricao": "Bacos | Rua Professor Otacilio, 35 | Entrega: Entregue"
+  },
+  {
+    "nome": "NP38",
+    "bairro": "Santa Rosa",
+    "tipologia": [
+      "2q",
+      "3q"
+    ],
+    "perfil": [],
+    "descricao": "Joama | Rua Newton Prado, 38 | Entrega: 2028"
+  },
+  {
+    "nome": "Santa Rosa Open Residencial",
+    "bairro": "Santa Rosa",
+    "tipologia": [
+      "1q",
+      "2q"
+    ],
+    "perfil": [],
+    "descricao": "GPCOM | Travessa Martins Torres, 154 | Entrega: Entregue"
+  },
+  {
+    "nome": "Flua",
+    "bairro": "São Domingos",
+    "tipologia": [
+      "2q",
+      "3q"
+    ],
+    "perfil": [],
+    "descricao": "Tegra | Avenida Visconde do Rio Branco, 731 | Entrega: Entregue"
+  },
+  {
+    "nome": "115 Tapuias Residences",
+    "bairro": "São Francisco",
+    "tipologia": [
+      "4q",
+      "3q"
+    ],
+    "perfil": [],
+    "descricao": "MRC | Rua Tapuias, nº 115 | Entrega: 2026"
+  },
+  {
+    "nome": "Arend Residencial",
+    "bairro": "São Francisco",
+    "tipologia": [
+      "1q",
+      "3q"
+    ],
+    "perfil": [],
+    "descricao": "Fernandes Maciel | Rua Barbosa, 303 | Entrega: 2028"
+  },
+  {
+    "nome": "OKA Studios Residenciais",
+    "bairro": "São Francisco",
+    "tipologia": [
+      "studio"
+    ],
+    "perfil": [],
+    "descricao": "Bacos | Avenida Quintino Bocaiúva, 241 | Entrega: 2026"
+  },
+  {
+    "nome": "Style",
+    "bairro": "São Francisco",
+    "tipologia": [
+      "3q",
+      "4q"
+    ],
+    "perfil": [],
+    "descricao": "Bacos | Rua Major Froes, 255 | Entrega: 2027"
+  },
+  {
+    "nome": "Reserva São Francisco",
+    "bairro": "São Francisco",
+    "tipologia": [
+      "2q",
+      "3q"
+    ],
+    "perfil": [],
+    "descricao": "Elvas - Krion | Av Rui Barbosa 252 | Entrega: 2026"
+  },
+  {
+    "nome": "Conviva Itacoa",
+    "bairro": "Itacoatiara",
+    "tipologia": [
+      "1q"
+    ],
+    "perfil": [],
+    "descricao": "Conviva | Rua Antonio Cotta, 28 | Entrega: 2028"
+  } 
+]

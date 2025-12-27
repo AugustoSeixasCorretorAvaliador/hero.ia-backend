@@ -1,0 +1,21 @@
+{
+  "name": "heroia-ia-do-corretor-whatsapp-backend",
+  "version": "1.0.0",
+  "description": "HERO.IA - IA do Corretor - Whatsapp Backend - Gera rascunhos de resposta IA no WhatsApp Web",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "import:empreendimentos": "node scripts/import-empreendimentos.js",
+    "normalize:empreendimentos": "node scripts/normalize-empreendimentos.js",
+    "generate:license": "node scripts/generate-license.js",
+    "license:generate": "node scripts/generate-license.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "openai": "^4.40.0",
+    "xlsx": "^0.18.5"
+  }
+}
