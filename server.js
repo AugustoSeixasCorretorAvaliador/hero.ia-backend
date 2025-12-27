@@ -195,20 +195,34 @@ function norm(s = "") {
 /* ===============================
    Rota principal (GERAR RASCUNHO)
 ================================ */
+app.get("/health", (req, res) => {
+  res.json({ status: "ok" });
+});
+
 app.post("/whatsapp/draft", licenseMiddleware, async (req, res) => {
   try {
-    let { mensagens } = req.body;
+    let { mensagens, message, bairro = "", tipologia = "" } = req.body || {};
+
+    // Permite tanto 'mensagens' (array/string) quanto 'message' (string)
+    if (!mensagens && message) mensagens = [message];
 
     if (!mensagens) {
-      return res.status(400).json({ error: "Campo 'mensagens' é obrigatório" });
+      return res.status(400).json({ error: "Campo 'mensagens' ou 'message' é obrigatório" });
     }
     if (!Array.isArray(mensagens)) mensagens = [mensagens];
 
+    // Normaliza e filtra vazios
+    mensagens = mensagens
+      .filter((m) => typeof m === "string")
+      .map((m) => m.trim())
+      .filter(Boolean);
+
+    if (mensagens.length === 0) {
+      return res.status(400).json({ error: "Nenhuma mensagem válida fornecida" });
+    }
+
     // pega a última mensagem fornecida pelo cliente
     const msg = mensagens[mensagens.length - 1];
-    if (!msg || typeof msg !== "string") {
-      return res.status(400).json({ error: "Mensagem inválida" });
-    }
 
     const prompt = buildPromptForMessage({ mensagem: msg, empreendimentos });
 
