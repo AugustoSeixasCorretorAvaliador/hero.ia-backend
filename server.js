@@ -184,7 +184,8 @@ const _rawEmpreendimentos = JSON.parse(
 // Normaliza descricoes com 'Entrega: —' para 'Entrega: a confirmar'
 const empreendimentos = _rawEmpreendimentos.map((e) => {
   const desc = (e.descricao || "").replace(/Entrega:\s*[—-]+/g, "Entrega: a confirmar");
-  return { ...e, descricao: desc };
+  const perfil = Array.isArray(e.perfil) && e.perfil.length > 0 ? e.perfil : ["moradia", "investimento"];
+  return { ...e, descricao: desc, perfil };
 });
 
 const ALL_NAMES = empreendimentos.map((e) => norm(e.nome));
@@ -203,6 +204,21 @@ function matchesAlias(msgNorm, bairroNorm) {
 
 function findCandidates(msg) {
   const msgNorm = norm(msg);
+  const tipologiaRegexes = [
+    { rx: /(1\s*quarto[s]?|1q\b|um\s+quarto)/i, key: "1q" },
+    { rx: /(2\s*quarto[s]?|2q\b|dois\s+quartos)/i, key: "2q" },
+    { rx: /(3\s*quarto[s]?|3q\b|tres\s+quartos|três\s+quartos)/i, key: "3q" },
+    { rx: /(4\s*quarto[s]?|4q\b|quatro\s+quartos)/i, key: "4q" },
+    { rx: /(studio|st\b|estudio|estúdio)/i, key: "studio" },
+    { rx: /(loft)/i, key: "loft" },
+    { rx: /(cobertura)/i, key: "cobertura" },
+    { rx: /(lote[s]?|terreno[s]?)/i, key: "lote" }
+  ];
+
+  const tipsMentioned = tipologiaRegexes
+    .filter((t) => t.rx.test(msg))
+    .map((t) => norm(t.key));
+
   return empreendimentos.filter((e) => {
     const bairroNorm = norm(e.bairro || "");
     const nomeNorm = norm(e.nome || "");
@@ -214,7 +230,7 @@ function findCandidates(msg) {
 
     const matchBairro = bairroNorm && (msgNorm.includes(bairroNorm) || matchesAlias(msgNorm, bairroNorm));
     const matchNome = nomeNorm && msgNorm.includes(nomeNorm);
-    const matchTip = tips.some((t) => t && msgNorm.includes(t));
+    const matchTip = tips.some((t) => t && (msgNorm.includes(t) || tipsMentioned.includes(t)));
 
     return matchBairro || matchNome || matchTip;
   });
@@ -325,36 +341,39 @@ app.post("/whatsapp/draft", licenseMiddleware, async (req, res) => {
 
     const prompt = buildPromptForMessage({ mensagem: msg, empreendimentos: candidates });
 
-    const response = await openai.responses.create({
-      model: "gpt-4o-mini",
-      input: [
-        { role: "system", content: prompt },
-        { role: "user", content: msg }
-      ],
-      response_format: { type: "json_object" },
-      max_output_tokens: 1500,
-      temperature: 0,
-      top_p: 1
-    });
-
-    const modelText =
-      response.output_text ||
-      response.output?.[0]?.content?.[0]?.text ||
-      "";
-
     let payload = null;
 
     try {
-      const parsed = JSON.parse(modelText);
-      if (parsed && typeof parsed === "object" && typeof parsed.resposta === "string") {
-        parsed.resposta = removeAISignature(parsed.resposta);
-        payload = parsed;
+      const response = await openai.responses.create({
+        model: "gpt-4o-mini",
+        input: [
+          { role: "system", content: prompt },
+          { role: "user", content: msg }
+        ],
+        response_format: { type: "json_object" },
+        max_output_tokens: 1500,
+        temperature: 0,
+        top_p: 1
+      });
+
+      const modelText =
+        response.output_text ||
+        response.output?.[0]?.content?.[0]?.text ||
+        "";
+
+      try {
+        const parsed = JSON.parse(modelText);
+        if (parsed && typeof parsed === "object" && typeof parsed.resposta === "string") {
+          parsed.resposta = removeAISignature(parsed.resposta);
+          payload = parsed;
+        }
+      } catch (e) {
+        // continua para fallback
       }
-    } catch (e) {
-      // continua para fallback
+    } catch (errCall) {
+      console.error("OpenAI error:", errCall?.response?.data || errCall.message);
     }
 
-    // Se parsing falhou ou a IA citou itens fora dos candidatos, força fallback
     if (!payload || detectForeignReference(payload.resposta || "", candidates)) {
       payload = buildFallbackPayload();
     }
