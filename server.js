@@ -149,7 +149,7 @@ function extractMentionedNames(msgPad, empreendimentos) {
     const nomeNorm = norm(e.nome || "");
     if (!nomeNorm) return;
     const tokens = nomeNorm.split(/\s+/).filter(Boolean);
-    const tokenHit = tokens.some((w) => w.length >= 2 && includesWord(msgPad, w));
+    const tokenHit = tokens.some((w) => w.length >= 4 && includesWord(msgPad, w));
     if (includesWord(msgPad, nomeNorm) || tokenHit) {
       matched.push(e);
     }
@@ -259,15 +259,15 @@ function findCandidates(msg) {
   const msgNorm = norm(msg);
   const msgPad = ` ${msgNorm} `;
 
-  const names = extractMentionedNames(msgPad, empreendimentos);
-  if (names.length > 0) {
-    return { list: names, reason: "nome" };
-  }
-
   const bairros = extractMentionedBairros(msgPad, empreendimentos);
   if (bairros.length > 0) {
     const bairroMatches = empreendimentos.filter((e) => bairros.includes(norm(e.bairro || "")));
     return { list: bairroMatches, reason: "bairro", bairros };
+  }
+
+  const names = extractMentionedNames(msgPad, empreendimentos);
+  if (names.length > 0) {
+    return { list: names, reason: "nome" };
   }
 
   return { list: [], reason: "none" };
@@ -276,11 +276,11 @@ function findCandidates(msg) {
 function buildFallbackPayload() {
   return {
     resposta:
-      "Não localizei esse recorte na minha base agora, mas posso te apresentar alternativas estratégicas em Niterói e Região Oceânica que façam sentido para você. 😊",
+      "Não entendi o nome do empreendimento ou o bairro para listar as disponibilidades. Me diz o nome ou o bairro que prefere e a tipologia (ex: studio, 2q, 3q, 4q) para eu puxar as opções certas. 😊",
     followups: [
-      "Posso te mostrar 2 opções rápidas alinhadas ao que você busca.",
-      "Se preferir, faço uma ligação curta para alinharmos o perfil e ganhar tempo.",
-      "Quer que eu envie um comparativo objetivo entre as melhores alternativas?"
+      "Pode me dizer agora o nome ou bairro e a tipologia (studio, 2q, 3q, 4q)?",
+      "Me passa o bairro favorito que eu puxo em segundos as opções certas.",
+      "Se preferir, faço uma ligação rápida só para alinhar e enviar as opções ideais."
     ]
   };
 }
@@ -425,6 +425,31 @@ app.post("/whatsapp/draft", licenseMiddleware, async (req, res) => {
     console.error("ERROR /whatsapp/draft:", err?.response?.data || err.message);
     return res.status(500).json({ error: "Erro ao gerar rascunho" });
   }
+});
+
+// ===============================
+// Endpoint interno de verificação (determinístico, sem LLM)
+// ===============================
+app.get("/debug/match", (req, res) => {
+  const q = String(req.query.q || "").trim();
+  if (!q) {
+    return res.status(400).json({ error: "Parâmetro 'q' é obrigatório" });
+  }
+
+  const { list, reason, bairros } = findCandidates(q);
+  const items = (list || []).map((e) => ({
+    nome: e.nome,
+    bairro: e.bairro,
+    tipologia: e.tipologia || e.tipologias,
+    entrega: e.entrega
+  }));
+
+  return res.json({
+    reason,
+    bairros: bairros || [],
+    total: items.length,
+    items
+  });
 });
 
 /* ===============================
