@@ -1,266 +1,121 @@
 // ===============================
-// HERO.IA – Backend determinístico
+// WhatsApp AI Draft - content.js
 // ===============================
 
-import express from "express";
-import cors from "cors";
-import fs from "fs";
-import path from "path";
-import OpenAI from "openai";
-import { fileURLToPath } from "url";
+const BACKEND_URL = "http://localhost:3001/whatsapp/draft";
+const BUTTON_ID = "ai-draft-btn";
 
-// -------------------------------
-// Setup básico
-// -------------------------------
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+/* ===============================
+   Utilidades
+================================ */
 
-const app = express();
-const PORT = process.env.PORT || 3000;
+// Retorna as últimas N mensagens do chat (entrada e saída)
+function getLastMessages(limit = 3) {
+  const messages = document.querySelectorAll(
+    "div.message-in span.selectable-text, div.message-out span.selectable-text"
+  );
 
-app.use(cors());
-app.use(express.json());
+  if (!messages.length) return [];
 
-// -------------------------------
-// OpenAI (opcional)
-// -------------------------------
-let openai = null;
-if (process.env.OPENAI_API_KEY) {
-  openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-  });
+  return Array.from(messages)
+    .slice(-limit)
+    .map(el => el.innerText.trim())
+    .filter(Boolean);
 }
 
-// -------------------------------
-// Carrega base de empreendimentos
-// -------------------------------
-const DATA_PATH = path.join(__dirname, "data", "empreendimentos.json");
+// Insere texto no campo de digitação
+function insertTextInComposer(text) {
+  const editor = document.querySelector("[contenteditable='true']");
+  if (!editor) return;
 
-let EMPREENDIMENTOS = [];
-
-try {
-  const raw = fs.readFileSync(DATA_PATH, "utf-8");
-  EMPREENDIMENTOS = JSON.parse(raw);
-  console.log(`📦 Base carregada: ${EMPREENDIMENTOS.length} empreendimentos`);
-} catch (err) {
-  console.error("❌ Erro ao carregar empreendimentos.json", err);
-  process.exit(1);
+  editor.focus();
+  editor.innerHTML = "";
+  document.execCommand("insertText", false, text);
+  editor.dispatchEvent(new Event("input", { bubbles: true }));
 }
 
-// -------------------------------
-// Normalização
-// -------------------------------
-const norm = (s = "") =>
-  s
-    .toString()
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .trim();
+/* ===============================
+   Função principal (GLOBAL)
+================================ */
 
-// -------------------------------
-// Extração de intenção
-// -------------------------------
-function extractIntent(text) {
-  const t = norm(text);
+window.gerarRascunho = async function gerarRascunho() {
+  const mensagens = getLastMessages(3);
 
-  // Tipologias
-  let tipologia = null;
-  if (/\b4\s*q/.test(t) || t.includes("4 quartos")) tipologia = "4q";
-  else if (/\b3\s*q/.test(t) || t.includes("3 quartos")) tipologia = "3q";
-  else if (/\b2\s*q/.test(t) || t.includes("2 quartos")) tipologia = "2q";
-  else if (t.includes("studio")) tipologia = "studio";
-  else if (t.includes("lote")) tipologia = "lote";
-
-  // Bairro (match por base)
-  let bairro = null;
-  for (const e of EMPREENDIMENTOS) {
-    if (t.includes(norm(e.bairro))) {
-      bairro = e.bairro;
-      break;
-    }
+  if (!mensagens.length) {
+    alert("Não foi possível ler mensagens do chat.");
+    return;
   }
 
-  // Nome (match parcial forte)
-  let nome = null;
-  for (const e of EMPREENDIMENTOS) {
-    if (t.includes(norm(e.nome))) {
-      nome = e.nome;
-      break;
-    }
-  }
-
-  return { nome, bairro, tipologia };
-}
-
-// -------------------------------
-// Seleção determinística
-// -------------------------------
-function selectEmpreendimentos({ nome, bairro, tipologia }) {
-  // 1️⃣ PRIORIDADE ABSOLUTA: NOME
-  if (nome) {
-    const list = EMPREENDIMENTOS.filter(
-      (e) => norm(e.nome) === norm(nome)
-    );
-    return { origem: "nome", list };
-  }
-
-  // 2️⃣ BAIRRO (+ tipologia se existir)
-  if (bairro) {
-    let list = EMPREENDIMENTOS.filter(
-      (e) => norm(e.bairro) === norm(bairro)
-    );
-
-    if (tipologia) {
-      const filtrados = list.filter((e) =>
-        e.tipologias.map(norm).includes(norm(tipologia))
-      );
-      if (filtrados.length > 0) {
-        return { origem: "bairro+tipologia", list: filtrados };
-      }
-    }
-
-    return { origem: "bairro", list };
-  }
-
-  // 3️⃣ SOMENTE TIPOLOGIA
-  if (tipologia) {
-    const list = EMPREENDIMENTOS.filter((e) =>
-      e.tipologias.map(norm).includes(norm(tipologia))
-    );
-    return { origem: "tipologia", list };
-  }
-
-  // 4️⃣ Nada identificado
-  return { origem: "nenhum", list: [] };
-}
-
-// -------------------------------
-// Rota principal
-// -------------------------------
-app.post("/whatsapp/draft", async (req, res) => {
   try {
-    const { message } = req.body;
-
-    if (!message) {
-      return res.json({
-        resposta:
-          "Pode me dizer um pouco mais do que você procura? 😊",
-        origem: "mensagem_vazia",
-      });
-    }
-
-    const intent = extractIntent(message);
-    const result = selectEmpreendimentos(intent);
-
-    // ---------------------------
-    // Fallback SEM IA
-    // ---------------------------
-    if (result.list.length === 0) {
-      return res.json({
-        resposta:
-          "Para te orientar melhor, você pode informar o bairro ou o nome do empreendimento que procura? 😊",
-        origem: "fallback_sem_match",
-      });
-    }
-
-    // ---------------------------
-    // Tipologia sem bairro/nome
-    // ---------------------------
-    if (result.origem === "tipologia") {
-      const exemplos = result.list.slice(0, 5).map(
-        (e) => `${e.nome} em ${e.bairro}`
-      );
-
-      return res.json({
-        resposta:
-          `Tenho algumas opções com essa tipologia, como ${exemplos.join(
-            ", "
-          )}. Você tem algum bairro ou empreendimento específico em mente? 😊`,
-        origem: "tipologia_only",
-      });
-    }
-
-    // ---------------------------
-    // Monta payload seguro
-    // ---------------------------
-    const resumo = result.list.map((e) => ({
-      nome: e.nome,
-      bairro: e.bairro,
-      tipologias: e.tipologias,
-      entrega: e.entrega,
-    }));
-
-    // ---------------------------
-    // Sem OpenAI → resposta direta
-    // ---------------------------
-    if (!openai) {
-      const texto = resumo
-        .map(
-          (e) =>
-            `${e.nome} em ${e.bairro} — Tipologias: ${e.tipologias.join(
-              ", "
-            )} — Entrega: ${e.entrega}`
-        )
-        .join(" | ");
-
-      return res.json({
-        resposta:
-          `Encontrei opções reais na base: ${texto}. Quer que eu detalhe alguma delas ou prefere falar comigo agora? 😊`,
-        origem: "sem_openai",
-      });
-    }
-
-    // ---------------------------
-    // OpenAI apenas para REDAÇÃO
-    // ---------------------------
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      temperature: 0,
-      messages: [
-        {
-          role: "system",
-          content:
-            "Você é um corretor imobiliário humano e profissional. Apenas redija a resposta usando exclusivamente os dados fornecidos. Não invente empreendimentos.",
-        },
-        {
-          role: "user",
-          content: `
-Cliente perguntou: "${message}"
-
-Empreendimentos disponíveis (use apenas estes):
-${JSON.stringify(resumo, null, 2)}
-
-Redija uma resposta clara, objetiva e amigável, convidando o cliente a avançar.
-          `,
-        },
-      ],
+    const response = await fetch(BACKEND_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        mensagens
+      })
     });
 
-    return res.json({
-      resposta: completion.choices[0].message.content,
-      origem: result.origem,
-    });
+    if (!response.ok) {
+      throw new Error("Erro ao chamar backend");
+    }
+
+    const data = await response.json();
+
+    if (data.draft) {
+      insertTextInComposer(data.draft);
+    } else {
+      alert("Backend não retornou rascunho.");
+    }
+
   } catch (err) {
-    console.error("❌ Erro no /whatsapp/draft", err);
-    return res.json({
-      resposta:
-        "Tive um problema técnico agora. Pode tentar novamente em alguns instantes? 😊",
-      origem: "erro_backend",
-    });
+    console.error("ERRO FRONTEND:", err);
+    alert("Erro ao gerar rascunho. Verifique o backend.");
   }
+};
+
+/* ===============================
+   Botão
+================================ */
+
+function injectButton() {
+  const footer = document.querySelector("footer");
+  if (!footer) return;
+
+  if (document.getElementById(BUTTON_ID)) return;
+
+  const btn = document.createElement("button");
+  btn.id = BUTTON_ID;
+  btn.innerText = "✍️ Gerar rascunho";
+
+  btn.style.marginLeft = "8px";
+  btn.style.padding = "6px 12px";
+  btn.style.borderRadius = "6px";
+  btn.style.border = "none";
+  btn.style.cursor = "pointer";
+  btn.style.background = "#25D366";
+  btn.style.color = "#fff";
+  btn.style.fontSize = "13px";
+  btn.style.fontWeight = "600";
+
+  btn.onclick = window.gerarRascunho;
+
+  footer.appendChild(btn);
+}
+
+/* ===============================
+   Observador (SPA WhatsApp)
+================================ */
+
+const observer = new MutationObserver(() => {
+  injectButton();
 });
 
-// -------------------------------
-// Health check
-// -------------------------------
-app.get("/health", (req, res) => {
-  res.json({ status: "ok", service: "hero.ia-backend" });
+observer.observe(document.body, {
+  childList: true,
+  subtree: true
 });
 
-// -------------------------------
-// Start
-// -------------------------------
-app.listen(PORT, () => {
-  console.log(`🚀 HERO.IA backend rodando na porta ${PORT}`);
-});
+// Primeira tentativa imediata
+setTimeout(injectButton, 1000);
