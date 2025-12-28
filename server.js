@@ -292,13 +292,16 @@ function findCandidates(msg) {
   }
 
   const bairros = extractMentionedBairros(msgPad, empreendimentos);
+  if (bairros.length > 0 && tipsRequested.length > 0) {
+    const tipFiltered = empreendimentos.filter(
+      (e) => bairros.includes(norm(e.bairro || "")) && hasTipologia(e, tipsRequested)
+    );
+    return { list: tipFiltered, reason: "bairro+tip", requestedTips: tipsRequested, bairros };
+  }
+
   if (bairros.length > 0) {
     const bairroMatches = empreendimentos.filter((e) => bairros.includes(norm(e.bairro || "")));
-    if (tipsRequested.length > 0) {
-      const tipFiltered = bairroMatches.filter((e) => hasTipologia(e, tipsRequested));
-      return { list: tipFiltered, reason: "bairro+tip", requestedTips: tipsRequested };
-    }
-    return { list: bairroMatches, reason: "bairro" };
+    return { list: bairroMatches, reason: "bairro", bairros };
   }
 
   if (tipsRequested.length > 0) {
@@ -375,8 +378,14 @@ app.post("/whatsapp/draft", licenseMiddleware, async (req, res) => {
       return res.status(400).json({ error: "Mensagem inválida" });
     }
 
-    const { list: candidates, tipOnly, reason, requestedTips } = findCandidates(msg);
-    console.log("[findCandidates]", { reason, requestedTips, total: candidates?.length, sample: (candidates || []).slice(0, 3).map((e) => e.nome) });
+    const { list: candidates, tipOnly, reason, requestedTips, bairros } = findCandidates(msg);
+    console.log("[findCandidates]", {
+      reason,
+      bairros,
+      requestedTips,
+      total: candidates?.length,
+      sample: (candidates || []).slice(0, 5).map((e) => ({ nome: e.nome, bairro: e.bairro, tipologia: e.tipologia || e.tipologias }))
+    });
 
     if (!candidates || candidates.length === 0) {
       const payload = buildFallbackPayload();
