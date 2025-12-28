@@ -263,13 +263,17 @@ function findCandidates(msg) {
   });
 
   // Hierarquia: nome > bairro > tipologia > entrega
-  const byNome = mapped.filter((m) => m.matchNome).map((m) => m.e);
-  if (byNome.length > 0) return byNome;
-  if (mentionedNome && byNome.length === 0) return [];
+  const byNomeMatches = mapped.filter((m) => m.matchNome);
+  if (byNomeMatches.length > 0) return byNomeMatches.map((m) => m.e);
+  if (mentionedNome && byNomeMatches.length === 0) return [];
 
-  const byBairro = mapped.filter((m) => m.matchBairro).map((m) => m.e);
-  if (byBairro.length > 0) return byBairro;
-  if (mentionedBairro && byBairro.length === 0) return [];
+  const byBairroMatches = mapped.filter((m) => m.matchBairro);
+  if (byBairroMatches.length > 0) {
+    // Dentro do bairro, prioriza quem casa tipologia/entrega para trazer Pulse 4q antes de studios, por exemplo
+    byBairroMatches.sort((a, b) => Number(b.matchTip) - Number(a.matchTip) || Number(b.matchEntrega) - Number(a.matchEntrega));
+    return byBairroMatches.map((m) => m.e);
+  }
+  if (mentionedBairro && byBairroMatches.length === 0) return [];
 
   const byTip = mapped.filter((m) => m.matchTip).map((m) => m.e);
   if (!mentionedBairro && byTip.length > 0) return byTip;
@@ -304,7 +308,7 @@ function detectForeignReference(text, candidates) {
 
 function buildDeterministicPayload(candidates) {
   if (!candidates || candidates.length === 0) return null;
-  const max = Math.min(candidates.length, 3);
+  const max = Math.min(candidates.length, 6); // mostra mais opções quando houver, para não cortar tipologias relevantes
   const picks = candidates.slice(0, max);
   const resumo = picks
     .map((e) => {
