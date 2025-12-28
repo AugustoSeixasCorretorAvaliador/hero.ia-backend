@@ -259,6 +259,31 @@ function detectForeignReference(text, candidates) {
   return foreignName || foreignBairro;
 }
 
+function buildDeterministicPayload(candidates) {
+  if (!candidates || candidates.length === 0) return null;
+  const max = Math.min(candidates.length, 3);
+  const picks = candidates.slice(0, max);
+  const resumo = picks
+    .map((e) => {
+      const tipos = Array.isArray(e.tipologia)
+        ? e.tipologia.join(", ")
+        : Array.isArray(e.tipologias)
+        ? e.tipologias.join(", ")
+        : String(e.tipologia || e.tipologias || "");
+      return `${e.nome} em ${e.bairro} — Tipologias: ${tipos} — Entrega: ${e.entrega || "a confirmar"}`;
+    })
+    .join(" | ");
+
+  return {
+    resposta: `Encontrei opções reais na base: ${resumo}. Quer que eu detalhe a que mais combina com você ou agendamos uma ligação rápida? 🙂`,
+    followups: [
+      "Posso te enviar agora o descritivo do que mais se encaixa no seu perfil.",
+      "Se preferir, faço uma call de 5 minutos para tirar dúvidas e comparar opções.",
+      "Quer que eu separe as plantas e condições de lançamento para você avaliar?"
+    ]
+  };
+}
+
 // Normalização utilitária
 function norm(s = "") {
   return s.toString().normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
@@ -376,7 +401,7 @@ app.post("/whatsapp/draft", licenseMiddleware, async (req, res) => {
     }
 
     if (!payload || detectForeignReference(payload.resposta || "", candidates)) {
-      payload = buildFallbackPayload();
+      payload = buildDeterministicPayload(candidates) || buildFallbackPayload();
     }
 
     payload = appendSignatureIfNeeded(payload);
