@@ -330,7 +330,9 @@ function buildDeterministicPayload(candidates, { tipOnly = false } = {}) {
         : Array.isArray(e.tipologias)
         ? e.tipologias.join(", ")
         : String(e.tipologia || e.tipologias || "");
-      return `${e.nome} em ${e.bairro} — Tipologias: ${tipos} — Entrega: ${e.entrega || "a confirmar"}`;
+      const entrega = e.entrega || "a confirmar";
+      const desc = (e.descricao || "").replace(/\s+/g, " ").trim();
+      return `${e.nome} — Bairro: ${e.bairro} — Tipologias: ${tipos} — Entrega: ${entrega} — Descrição: ${desc}`;
     })
     .join(" | ");
 

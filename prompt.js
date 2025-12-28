@@ -23,6 +23,7 @@ export function buildPromptForMessage({ mensagem, empreendimentos }) {
     "- 5) Se não houver match de nome nem bairro, mas houver match de tipologia, responda com empreendimentos que tenham essa tipologia e peça explicitamente o bairro ou o nome para refinar.",
     "- 6) Se nenhum item casar, diga que não há na base e ofereça alternativas estratégicas em Niterói e Região Oceânica.",
     "Entrega é somente atributo descritivo; não é critério de seleção.",
+    "Inclua sempre para cada empreendimento retornado: nome, bairro, tipologias, entrega e descrição (endereço quando houver).",
     "Normalize nome/bairro/tipologia/região: trate Badu e Matapaca como Pendotiba; trate Maria Paula como Região Oceânica quando fizer sentido; considere variantes como Pendotiba/Pendo tiba/Pe ndotiba como equivalentes; considere 'q', 'quarto', 'quartos' como tipologia.",
     "Regras de resposta:",
     "- Texto corrido (sem listas/Markdown) e apenas uma resposta.",
