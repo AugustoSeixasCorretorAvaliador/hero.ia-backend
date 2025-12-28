@@ -30,6 +30,12 @@ const SIGNATURE = (process.env.SIGNATURE || DEFAULT_SIGNATURE).replace(/\\n/g, "
 // Modo de anexação: 'closing' (padrão), 'always' ou 'never'
 const APPEND_SIGNATURE_MODE = String(process.env.APPEND_SIGNATURE_MODE || "closing").toLowerCase();
 
+function maskKey(key = "") {
+  if (typeof key !== "string" || key.length === 0) return "<empty>";
+  if (key.length <= 6) return `${key[0]}***${key[key.length - 1]}`;
+  return `${key.slice(0, 3)}***${key.slice(-3)}`;
+}
+
 function sanitize(text = "") {
   return text
     .toString()
@@ -105,7 +111,7 @@ const openai = new OpenAI({
 /* ===============================
    Licenciamento simples (arquivo JSON)
 ================================ */
-const LICENSES_PATH = "./licenses.json";
+const LICENSES_PATH = "./data/licenses.json";
 let licenses = [];
 
 function loadLicenses() {
@@ -152,15 +158,14 @@ export function validateLicense(userKey) {
 
 function licenseMiddleware(req, res, next) {
   const userKey = req.header("x-user-key");
-  
+
   console.log("====== VALIDAÇÃO DE LICENÇA ======");
-  console.log("Licença recebida:", userKey);
+  console.log("Licença recebida (masked):", maskKey(userKey));
   console.log("Total de licenças carregadas:", licenses.length);
-  console.log("Licenças disponíveis:", licenses.map(l => l.userKey));
-  
+
   const result = validateLicense(userKey);
-  
-  console.log("Resultado da validação:", result);
+
+  console.log("Resultado da validação (ok/status):", { ok: result.ok, status: result.license?.status });
   console.log("===================================");
 
   if (!result.ok) {
@@ -177,19 +182,166 @@ loadLicenses();
 /* ===============================
    Carregar base de dados (com limpeza)
 ================================ */
-const _rawEmpreendimentos = JSON.parse(
-  fs.readFileSync("./data/empreendimentos.json", "utf-8")
-);
+let empreendimentos = [];
+let empreendimentosLoadError = null;
 
-// Normaliza descricoes com 'Entrega: —' para 'Entrega: a confirmar'
-const empreendimentos = _rawEmpreendimentos.map((e) => {
-  const desc = (e.descricao || "").replace(/Entrega:\s*[—-]+/g, "Entrega: a confirmar");
-  return { ...e, descricao: desc };
-});
+try {
+  const raw = fs.readFileSync("./data/empreendimentos.json", "utf-8");
+  const parsed = JSON.parse(raw);
+
+  // Normaliza descrições com 'Entrega: —' para 'Entrega: a confirmar' e garante perfil default
+  empreendimentos = parsed.map((e) => {
+    const desc = (e.descricao || "").replace(/Entrega:\s*[—-]+/g, "Entrega: a confirmar");
+    const perfil = Array.isArray(e.perfil) && e.perfil.length > 0 ? e.perfil : ["moradia", "investimento"];
+    return { ...e, descricao: desc, perfil };
+  });
+} catch (err) {
+  empreendimentosLoadError = err;
+  console.error("Erro ao carregar data/empreendimentos.json:", err.message);
+  empreendimentos = [];
+}
 
 // Normalização utilitária
 function norm(s = "") {
   return s.toString().normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+}
+
+// Cache para heurísticas de matching
+const ALL_NAMES = () => empreendimentos.map((e) => norm(e.nome));
+const ALL_BAIRROS = () => empreendimentos.map((e) => norm(e.bairro));
+
+const BAIRRO_ALIASES = {
+  badu: "pendotiba",
+  matapaca: "pendotiba",
+  "mata paca": "pendotiba",
+  "maria paula": "maria paula"
+};
+
+function matchesAlias(msgNorm, bairroNorm) {
+  return Object.entries(BAIRRO_ALIASES).some(
+    ([alias, target]) => msgNorm.includes(alias) && bairroNorm.includes(target)
+  );
+}
+
+function findCandidates(msg) {
+  const msgNorm = norm(msg);
+  const msgNormClean = ` ${msgNorm} `; // padding para regex de borda
+
+  function includesWord(haystack, term) {
+    if (!term) return false;
+    const safe = term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const re = new RegExp(`(^|[^a-z0-9])${safe}([^a-z0-9]|$)`);
+    // tokens muito curtos sofrem em regex de borda; usa includes para evitar perder recall
+    if (term.length < 4) return haystack.includes(term);
+    return re.test(haystack);
+  }
+
+  const mentionedBairro =
+    ALL_BAIRROS().some((b) => includesWord(msgNormClean, b)) ||
+    Object.keys(BAIRRO_ALIASES).some((alias) => includesWord(msgNormClean, alias));
+
+  const mentionedNome = ALL_NAMES().some((n) => includesWord(msgNormClean, n));
+
+  const tipologiaRegexes = [
+    { rx: /(1\s*quarto[s]?|1q\b|1\s*qtos?|1\s*qts?|um\s+quarto)/i, key: "1q" },
+    { rx: /(2\s*quarto[s]?|2q\b|2\s*qtos?|2\s*qts?|dois\s+quartos)/i, key: "2q" },
+    { rx: /(3\s*quarto[s]?|3q\b|3\s*qtos?|3\s*qts?|tres\s+quartos|três\s+quartos)/i, key: "3q" },
+    { rx: /(4\s*quarto[s]?|4q\b|4\s*qtos?|4\s*qts?|4\s*qto|quatro\s+quartos)/i, key: "4q" },
+    { rx: /(studio|st\b|estudio|estúdio)/i, key: "studio" },
+    { rx: /(loft)/i, key: "loft" },
+    { rx: /(cobertura|\bcob\.?\b)/i, key: "cobertura" },
+    { rx: /(lote[s]?|terreno[s]?)/i, key: "lote" }
+  ];
+
+  const tipsMentioned = tipologiaRegexes
+    .filter((t) => t.rx.test(msg))
+    .map((t) => norm(t.key));
+
+  const mapped = empreendimentos.map((e) => {
+    const bairroNorm = norm(e.bairro || "");
+    const nomeNorm = norm(e.nome || "");
+    const nomeTokens = nomeNorm.split(/\s+/).filter(Boolean);
+    const tips = Array.isArray(e.tipologia)
+      ? e.tipologia.map((t) => norm(t))
+      : Array.isArray(e.tipologias)
+      ? e.tipologias.map((t) => norm(t))
+      : [norm(e.tipologia || e.tipologias || "")];
+
+    const entregaNorm = norm(e.entrega || "");
+
+    const matchBairro =
+      bairroNorm &&
+      (includesWord(msgNormClean, bairroNorm) || matchesAlias(msgNormClean, bairroNorm));
+    const matchNome =
+      nomeNorm &&
+      (includesWord(msgNormClean, nomeNorm) ||
+        nomeTokens.some((w) => w && includesWord(msgNormClean, w)));
+    const matchTip = tips.some((t) => t && (msgNorm.includes(t) || tipsMentioned.includes(t)));
+
+    const matchEntrega =
+      entregaNorm &&
+      (includesWord(msgNormClean, entregaNorm) ||
+        (/20\d{2}/.test(msgNorm) && entregaNorm === msgNorm.match(/20\d{2}/)?.[0]));
+
+    return { e, matchNome, matchBairro, matchTip, matchEntrega };
+  });
+
+  const byNomeMatches = mapped.filter((m) => m.matchNome);
+  if (byNomeMatches.length > 0) return { list: byNomeMatches.map((m) => m.e), usedFullBase: false };
+  if (mentionedNome && byNomeMatches.length === 0) return { list: empreendimentos, usedFullBase: true };
+
+  const byBairroMatches = mapped.filter((m) => m.matchBairro);
+  if (byBairroMatches.length > 0) {
+    byBairroMatches.sort((a, b) => Number(b.matchTip) - Number(a.matchTip) || Number(b.matchEntrega) - Number(a.matchEntrega));
+    return { list: byBairroMatches.map((m) => m.e), usedFullBase: false };
+  }
+  if (mentionedBairro && byBairroMatches.length === 0) return { list: empreendimentos, usedFullBase: true };
+
+  const byTip = mapped.filter((m) => m.matchTip).map((m) => m.e);
+  if (byTip.length > 0) return { list: byTip, usedFullBase: false };
+
+  const byEntrega = mapped.filter((m) => m.matchEntrega).map((m) => m.e);
+  if (byEntrega.length > 0) return { list: byEntrega, usedFullBase: false };
+
+  // fallback: usa a base completa para manter recall (evita derrubar acerto)
+  return { list: empreendimentos, usedFullBase: true };
+}
+
+function buildFallbackPayload() {
+  return {
+    resposta:
+      "Não localizei esse recorte na minha base agora, mas posso te apresentar alternativas estratégicas em Niterói e Região Oceânica que façam sentido para você. 😊",
+    followups: [
+      "Posso te mostrar 2 opções rápidas alinhadas ao que você busca.",
+      "Se preferir, faço uma ligação curta para alinharmos o perfil e ganhar tempo.",
+      "Quer que eu envie um comparativo objetivo entre as melhores alternativas?"
+    ]
+  };
+}
+
+function buildDeterministicPayload(candidates) {
+  if (!candidates || candidates.length === 0) return null;
+  const max = Math.min(candidates.length, 8);
+  const picks = candidates.slice(0, max);
+  const resumo = picks
+    .map((e) => {
+      const tipos = Array.isArray(e.tipologia)
+        ? e.tipologia.join(", ")
+        : Array.isArray(e.tipologias)
+        ? e.tipologias.join(", ")
+        : String(e.tipologia || e.tipologias || "");
+      return `${e.nome} em ${e.bairro} — Tipologias: ${tipos} — Entrega: ${e.entrega || "a confirmar"}`;
+    })
+    .join(" | ");
+
+  return {
+    resposta: `Encontrei opções reais na base: ${resumo}. Quer que eu detalhe a que mais combina com você ou agendamos uma ligação rápida? 🙂`,
+    followups: [
+      "Posso te enviar agora o descritivo do que mais se encaixa no seu perfil.",
+      "Se preferir, faço uma call de 5 minutos para tirar dúvidas e comparar opções.",
+      "Quer que eu separe as plantas e condições de lançamento para você avaliar?"
+    ]
+  };
 }
 
 /* ===============================
@@ -197,7 +349,13 @@ function norm(s = "") {
 ================================ */
 app.post("/whatsapp/draft", licenseMiddleware, async (req, res) => {
   try {
-    let { mensagens } = req.body;
+    if (empreendimentosLoadError) {
+      return res.status(503).json({ error: "Base de empreendimentos indisponível no momento" });
+    }
+
+    let { mensagens, message } = req.body || {};
+
+    if (!mensagens && message) mensagens = [message];
 
     if (!mensagens) {
       return res.status(400).json({ error: "Campo 'mensagens' é obrigatório" });
@@ -210,23 +368,43 @@ app.post("/whatsapp/draft", licenseMiddleware, async (req, res) => {
       return res.status(400).json({ error: "Mensagem inválida" });
     }
 
-    const prompt = buildPromptForMessage({ mensagem: msg, empreendimentos });
+    const { list: candidates } = findCandidates(msg);
+    const prompt = buildPromptForMessage({ mensagem: msg, empreendimentos: candidates });
 
-    const response = await openai.responses.create({
-      model: "gpt-4o-mini",
-      input: [
-        { role: "system", content: prompt },
-        { role: "user", content: msg }
-      ],
-      max_output_tokens: 2000,
-      temperature: 0.3
-    });
+    let payload = null;
 
-    const modelText = response.output_text || "";
+    try {
+      const response = await openai.responses.create({
+        model: "gpt-4o-mini",
+        input: [
+          { role: "system", content: prompt },
+          { role: "user", content: msg }
+        ],
+        response_format: { type: "json_object" },
+        max_output_tokens: 1500,
+        temperature: 0,
+        top_p: 1
+      });
+
+      const modelText =
+        response.output_text ||
+        response.output?.[0]?.content?.[0]?.text ||
+        "";
+
+      try {
+        const parsed = JSON.parse(modelText);
+        if (parsed && typeof parsed === "object" && typeof parsed.resposta === "string") {
+          payload = parsed;
+        }
+      } catch (e) {
+        // segue para fallback
+      }
+    } catch (errCall) {
+      console.error("OpenAI error:", errCall?.response?.data || errCall.message);
+    }
 
     // Função para remover qualquer assinatura que a IA tenha incluído indevidamente
     function removeAISignature(text) {
-      // Remove emojis e dados de contato que a IA possa ter incluído
       const signaturePatterns = [
         /👨🏻‍💼\s*Augusto Seixas/g,
         /🏠\s*Corretor de Imóveis/g,
@@ -239,55 +417,32 @@ app.post("/whatsapp/draft", licenseMiddleware, async (req, res) => {
         /🔗\s*Confira.*?sociais:/g,
         /👉\s*[\w.-]+\.com\.br/g
       ];
-      
+
       let cleaned = text;
-      signaturePatterns.forEach(pattern => {
-        cleaned = cleaned.replace(pattern, '');
+      signaturePatterns.forEach((pattern) => {
+        cleaned = cleaned.replace(pattern, "");
       });
-      
+
       return cleaned.trim();
     }
 
-    // Tenta interpretar como JSON no formato { resposta, followups, ... }
-    let draftOut = modelText;
-    try {
-      const parsed = JSON.parse(modelText);
-      if (parsed && typeof parsed === "object") {
-        if (typeof parsed.resposta === "string") {
-          // Remove qualquer assinatura que a IA tenha incluído
-          parsed.resposta = removeAISignature(parsed.resposta);
-          
-          if (APPEND_SIGNATURE) {
-            const normalized = parsed.resposta.trim();
-            const shouldAppend = shouldAppendSignature({
-              mode: APPEND_SIGNATURE_MODE,
-              userText: msg,
-              aiText: normalized
-            });
-            parsed.resposta = shouldAppend ? `${normalized}\n\n${SIGNATURE}` : normalized;
-          }
-        }
-        // Preserva as quebras de linha ao serializar o JSON
-        draftOut = JSON.stringify(parsed, null, 0);
-      }
-    } catch (e) {
-      // Não é JSON; apenas adiciona a assinatura ao texto bruto conforme modo
-      if (typeof draftOut === "string") {
-        draftOut = removeAISignature(draftOut);
-        
-        if (APPEND_SIGNATURE) {
-          const normalized = draftOut.trim();
-          const shouldAppend = shouldAppendSignature({
-            mode: APPEND_SIGNATURE_MODE,
-            userText: msg,
-            aiText: normalized
-          });
-          draftOut = shouldAppend ? `${normalized}\n\n${SIGNATURE}` : normalized;
-        }
-      }
+    if (!payload) {
+      payload = buildDeterministicPayload(candidates) || buildFallbackPayload();
     }
 
-    return res.json({ draft: draftOut });
+    payload.resposta = removeAISignature(payload.resposta || "");
+
+    if (APPEND_SIGNATURE && typeof payload.resposta === "string") {
+      const normalized = payload.resposta.trim();
+      const shouldAppend = shouldAppendSignature({
+        mode: APPEND_SIGNATURE_MODE,
+        userText: msg,
+        aiText: normalized
+      });
+      payload.resposta = shouldAppend ? `${normalized}\n\n${SIGNATURE}` : normalized;
+    }
+
+    return res.json({ draft: JSON.stringify(payload, null, 0) });
   } catch (err) {
     console.error("ERROR /whatsapp/draft:", err?.response?.data || err.message);
     return res.status(500).json({ error: "Erro ao gerar rascunho" });
