@@ -204,8 +204,15 @@ function matchesAlias(msgNorm, bairroNorm) {
 
 function findCandidates(msg) {
   const msgNorm = norm(msg);
-  // Evita falso-positivo de substring "...piratin-inga" (Piratininga) sendo lido como Ingá
-  const msgNormClean = msgNorm.replace(/piratininga/g, "piratininga ");
+  // Texto com espaços sentinela para evitar matches parciais (ex.: "piratininga" bater em "inga")
+  const msgNormClean = ` ${msgNorm} `;
+
+  function includesWord(haystack, term) {
+    if (!term) return false;
+    const safe = term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const re = new RegExp(`(^|\\s)${safe}(\\s|$)`);
+    return re.test(haystack);
+  }
   const tipologiaRegexes = [
     { rx: /(1\s*quarto[s]?|1q\b|um\s+quarto)/i, key: "1q" },
     { rx: /(2\s*quarto[s]?|2q\b|dois\s+quartos)/i, key: "2q" },
@@ -234,10 +241,10 @@ function findCandidates(msg) {
 
       const matchBairro =
         bairroNorm &&
-        (msgNormClean.includes(bairroNorm) || matchesAlias(msgNormClean, bairroNorm));
+        (includesWord(msgNormClean, bairroNorm) || matchesAlias(msgNormClean, bairroNorm));
       const matchNome =
         nomeNorm &&
-        (msgNormClean.includes(nomeNorm) || nomeTokens.some((w) => w.length >= 3 && msgNormClean.includes(w)));
+        (includesWord(msgNormClean, nomeNorm) || nomeTokens.some((w) => w.length >= 3 && includesWord(msgNormClean, w)));
       const matchTip = tips.some((t) => t && (msgNorm.includes(t) || tipsMentioned.includes(t)));
 
       // score: prioritize name/bairro; tip alone is lowest
