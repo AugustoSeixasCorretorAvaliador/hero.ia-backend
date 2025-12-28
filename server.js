@@ -213,6 +213,13 @@ function findCandidates(msg) {
     const re = new RegExp(`(^|\\s)${safe}(\\s|$)`);
     return re.test(haystack);
   }
+
+  // Detecta se o usuário mencionou explicitamente algum bairro ou nome conhecido
+  const mentionedBairro =
+    ALL_BAIRROS.some((b) => includesWord(msgNormClean, b)) ||
+    Object.keys(BAIRRO_ALIASES).some((alias) => includesWord(msgNormClean, alias));
+
+  const mentionedNome = ALL_NAMES.some((n) => includesWord(msgNormClean, n));
   const tipologiaRegexes = [
     { rx: /(1\s*quarto[s]?|1q\b|um\s+quarto)/i, key: "1q" },
     { rx: /(2\s*quarto[s]?|2q\b|dois\s+quartos)/i, key: "2q" },
@@ -247,7 +254,12 @@ function findCandidates(msg) {
         (includesWord(msgNormClean, nomeNorm) || nomeTokens.some((w) => w.length >= 3 && includesWord(msgNormClean, w)));
       const matchTip = tips.some((t) => t && (msgNorm.includes(t) || tipsMentioned.includes(t)));
 
-      // score: prioritize name/bairro; tip alone is lowest
+      // Se o usuário citou bairro, só vale se bateu bairro; idem para nome
+      if ((mentionedBairro && !matchBairro) || (mentionedNome && !matchNome)) {
+        return { e, score: 0 };
+      }
+
+      // score: prioritize name/bairro; tip alone é o menor peso
       let score = 0;
       if (matchNome) score += 3;
       if (matchBairro) score += 2;
