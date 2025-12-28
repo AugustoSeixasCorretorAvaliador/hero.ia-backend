@@ -222,6 +222,7 @@ function findCandidates(msg) {
   return empreendimentos.filter((e) => {
     const bairroNorm = norm(e.bairro || "");
     const nomeNorm = norm(e.nome || "");
+    const nomeTokens = nomeNorm.split(/\s+/).filter(Boolean);
     const tips = Array.isArray(e.tipologia)
       ? e.tipologia.map((t) => norm(t))
       : Array.isArray(e.tipologias)
@@ -229,7 +230,7 @@ function findCandidates(msg) {
       : [norm(e.tipologia || e.tipologias || "")];
 
     const matchBairro = bairroNorm && (msgNorm.includes(bairroNorm) || matchesAlias(msgNorm, bairroNorm));
-    const matchNome = nomeNorm && msgNorm.includes(nomeNorm);
+    const matchNome = nomeNorm && (msgNorm.includes(nomeNorm) || nomeTokens.some((w) => w.length >= 3 && msgNorm.includes(w)));
     const matchTip = tips.some((t) => t && (msgNorm.includes(t) || tipsMentioned.includes(t)));
 
     return matchBairro || matchNome || matchTip;
