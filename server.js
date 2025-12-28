@@ -296,11 +296,9 @@ function findCandidates(msg) {
     const bairroMatches = empreendimentos.filter((e) => bairros.includes(norm(e.bairro || "")));
     if (tipsRequested.length > 0) {
       const tipFiltered = bairroMatches.filter((e) => hasTipologia(e, tipsRequested));
-      if (tipFiltered.length > 0) {
-        return { list: tipFiltered, reason: "bairro+tip", requestedTips: tipsRequested };
-      }
+      return { list: tipFiltered, reason: "bairro+tip", requestedTips: tipsRequested };
     }
-    return { list: bairroMatches, reason: tipsRequested.length > 0 ? "bairro+tip-empty" : "bairro" };
+    return { list: bairroMatches, reason: "bairro" };
   }
 
   if (tipsRequested.length > 0) {
