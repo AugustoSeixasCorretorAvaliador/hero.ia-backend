@@ -187,6 +187,61 @@ const empreendimentos = _rawEmpreendimentos.map((e) => {
   return { ...e, descricao: desc };
 });
 
+const ALL_NAMES = empreendimentos.map((e) => norm(e.nome));
+const ALL_BAIRROS = empreendimentos.map((e) => norm(e.bairro));
+
+const BAIRRO_ALIASES = {
+  badu: "pendotiba",
+  matapaca: "pendotiba",
+  "mata paca": "pendotiba",
+  "maria paula": "maria paula"
+};
+
+function matchesAlias(msgNorm, bairroNorm) {
+  return Object.entries(BAIRRO_ALIASES).some(([alias, target]) => msgNorm.includes(alias) && bairroNorm.includes(target));
+}
+
+function findCandidates(msg) {
+  const msgNorm = norm(msg);
+  return empreendimentos.filter((e) => {
+    const bairroNorm = norm(e.bairro || "");
+    const nomeNorm = norm(e.nome || "");
+    const tips = Array.isArray(e.tipologia)
+      ? e.tipologia.map((t) => norm(t))
+      : Array.isArray(e.tipologias)
+      ? e.tipologias.map((t) => norm(t))
+      : [norm(e.tipologia || e.tipologias || "")];
+
+    const matchBairro = bairroNorm && (msgNorm.includes(bairroNorm) || matchesAlias(msgNorm, bairroNorm));
+    const matchNome = nomeNorm && msgNorm.includes(nomeNorm);
+    const matchTip = tips.some((t) => t && msgNorm.includes(t));
+
+    return matchBairro || matchNome || matchTip;
+  });
+}
+
+function buildFallbackPayload() {
+  return {
+    resposta: "Não localizei esse recorte na minha base agora, mas posso te apresentar alternativas estratégicas em Niterói e Região Oceânica que façam sentido para você. 😊",
+    followups: [
+      "Posso te mostrar 2 opções rápidas alinhadas ao que você busca.",
+      "Se preferir, faço uma ligação curta para alinharmos o perfil e ganhar tempo.",
+      "Quer que eu envie um comparativo objetivo entre as melhores alternativas?"
+    ]
+  };
+}
+
+function detectForeignReference(text, candidates) {
+  const t = norm(text);
+  const allowedNames = candidates.map((e) => norm(e.nome));
+  const allowedBairros = candidates.map((e) => norm(e.bairro));
+
+  const foreignName = ALL_NAMES.some((name) => t.includes(name) && !allowedNames.includes(name));
+  const foreignBairro = ALL_BAIRROS.some((b) => t.includes(b) && !allowedBairros.includes(b));
+
+  return foreignName || foreignBairro;
+}
+
 // Normalização utilitária
 function norm(s = "") {
   return s.toString().normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
@@ -223,24 +278,10 @@ app.post("/whatsapp/draft", licenseMiddleware, async (req, res) => {
 
     // pega a última mensagem fornecida pelo cliente
     const msg = mensagens[mensagens.length - 1];
-
-    const prompt = buildPromptForMessage({ mensagem: msg, empreendimentos });
-
-    const response = await openai.responses.create({
-      model: "gpt-4o-mini",
-      input: [
-        { role: "system", content: prompt },
-        { role: "user", content: msg }
-      ],
-      max_output_tokens: 2000,
-      temperature: 0.3
-    });
-
-    const modelText = response.output_text || "";
+    const candidates = findCandidates(msg);
 
     // Função para remover qualquer assinatura que a IA tenha incluído indevidamente
     function removeAISignature(text) {
-      // Remove emojis e dados de contato que a IA possa ter incluído
       const signaturePatterns = [
         /👨🏻‍💼\s*Augusto Seixas/g,
         /🏠\s*Corretor de Imóveis/g,
@@ -253,55 +294,74 @@ app.post("/whatsapp/draft", licenseMiddleware, async (req, res) => {
         /🔗\s*Confira.*?sociais:/g,
         /👉\s*[\w.-]+\.com\.br/g
       ];
-      
+
       let cleaned = text;
-      signaturePatterns.forEach(pattern => {
-        cleaned = cleaned.replace(pattern, '');
+      signaturePatterns.forEach((pattern) => {
+        cleaned = cleaned.replace(pattern, "");
       });
-      
+
       return cleaned.trim();
     }
 
-    // Tenta interpretar como JSON no formato { resposta, followups, ... }
-    let draftOut = modelText;
-    try {
-      const parsed = JSON.parse(modelText);
-      if (parsed && typeof parsed === "object") {
-        if (typeof parsed.resposta === "string") {
-          // Remove qualquer assinatura que a IA tenha incluído
-          parsed.resposta = removeAISignature(parsed.resposta);
-          
-          if (APPEND_SIGNATURE) {
-            const normalized = parsed.resposta.trim();
-            const shouldAppend = shouldAppendSignature({
-              mode: APPEND_SIGNATURE_MODE,
-              userText: msg,
-              aiText: normalized
-            });
-            parsed.resposta = shouldAppend ? `${normalized}\n\n${SIGNATURE}` : normalized;
-          }
-        }
-        // Preserva as quebras de linha ao serializar o JSON
-        draftOut = JSON.stringify(parsed, null, 0);
-      }
-    } catch (e) {
-      // Não é JSON; apenas adiciona a assinatura ao texto bruto conforme modo
-      if (typeof draftOut === "string") {
-        draftOut = removeAISignature(draftOut);
-        
-        if (APPEND_SIGNATURE) {
-          const normalized = draftOut.trim();
-          const shouldAppend = shouldAppendSignature({
-            mode: APPEND_SIGNATURE_MODE,
-            userText: msg,
-            aiText: normalized
-          });
-          draftOut = shouldAppend ? `${normalized}\n\n${SIGNATURE}` : normalized;
-        }
-      }
+    function appendSignatureIfNeeded(payload) {
+      if (!APPEND_SIGNATURE || !payload || typeof payload.resposta !== "string") return payload;
+      const normalized = payload.resposta.trim();
+      const shouldAppend = shouldAppendSignature({
+        mode: APPEND_SIGNATURE_MODE,
+        userText: msg,
+        aiText: normalized
+      });
+      return {
+        ...payload,
+        resposta: shouldAppend ? `${normalized}\n\n${SIGNATURE}` : normalized
+      };
     }
 
-    return res.json({ draft: draftOut });
+    // Se não há candidatos determinísticos, devolve fallback sem chamar IA
+    if (candidates.length === 0) {
+      const payload = appendSignatureIfNeeded(buildFallbackPayload());
+      return res.json({ draft: JSON.stringify(payload, null, 0) });
+    }
+
+    const prompt = buildPromptForMessage({ mensagem: msg, empreendimentos: candidates });
+
+    const response = await openai.responses.create({
+      model: "gpt-4o-mini",
+      input: [
+        { role: "system", content: prompt },
+        { role: "user", content: msg }
+      ],
+      response_format: { type: "json_object" },
+      max_output_tokens: 1500,
+      temperature: 0,
+      top_p: 1
+    });
+
+    const modelText =
+      response.output_text ||
+      response.output?.[0]?.content?.[0]?.text ||
+      "";
+
+    let payload = null;
+
+    try {
+      const parsed = JSON.parse(modelText);
+      if (parsed && typeof parsed === "object" && typeof parsed.resposta === "string") {
+        parsed.resposta = removeAISignature(parsed.resposta);
+        payload = parsed;
+      }
+    } catch (e) {
+      // continua para fallback
+    }
+
+    // Se parsing falhou ou a IA citou itens fora dos candidatos, força fallback
+    if (!payload || detectForeignReference(payload.resposta || "", candidates)) {
+      payload = buildFallbackPayload();
+    }
+
+    payload = appendSignatureIfNeeded(payload);
+
+    return res.json({ draft: JSON.stringify(payload, null, 0) });
   } catch (err) {
     console.error("ERROR /whatsapp/draft:", err?.response?.data || err.message);
     return res.status(500).json({ error: "Erro ao gerar rascunho" });
