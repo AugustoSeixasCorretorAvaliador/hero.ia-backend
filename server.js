@@ -117,6 +117,29 @@ const BAIRRO_ALIASES = {
   "maria paula": "maria paula"
 };
 
+function hasTipologia(e, tipKeys) {
+  if (!tipKeys || tipKeys.length === 0) return false;
+  const tips = Array.isArray(e.tipologia)
+    ? e.tipologia
+    : Array.isArray(e.tipologias)
+    ? e.tipologias
+    : [e.tipologia || e.tipologias || ""];
+  const normTips = tips.map((t) => norm(t || ""));
+  const normKeys = tipKeys.map((t) => norm(t || ""));
+  return normKeys.some((t) => normTips.includes(t));
+}
+
+function extractTipKeys(msgNorm) {
+  const keys = [];
+  if (/\b(studio|studios)\b/.test(msgNorm)) keys.push("studio");
+  if (/\bloft\b/.test(msgNorm)) keys.push("loft");
+  if (/\b1\s*q(uarto)?s?\b/.test(msgNorm)) keys.push("1q");
+  if (/\b2\s*q(uarto)?s?\b/.test(msgNorm)) keys.push("2q");
+  if (/\b3\s*q(uarto)?s?\b/.test(msgNorm)) keys.push("3q");
+  if (/\b4\s*q(uarto)?s?\b/.test(msgNorm)) keys.push("4q");
+  return keys;
+}
+
 function includesWord(haystack, term) {
   if (!term) return false;
   const safe = term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -258,11 +281,18 @@ function norm(s = "") {
 function findCandidates(msg) {
   const msgNorm = norm(msg);
   const msgPad = ` ${msgNorm} `;
+  const tipKeys = extractTipKeys(msgNorm);
 
   const bairros = extractMentionedBairros(msgPad, empreendimentos);
   if (bairros.length > 0) {
     const bairroMatches = empreendimentos.filter((e) => bairros.includes(norm(e.bairro || "")));
-    return { list: bairroMatches, reason: "bairro", bairros };
+    if (tipKeys.length > 0) {
+      const filtered = bairroMatches.filter((e) => hasTipologia(e, tipKeys));
+      if (filtered.length > 0) {
+        return { list: filtered, reason: "bairro+tip", bairros, tipKeys };
+      }
+    }
+    return { list: bairroMatches, reason: "bairro", bairros, tipKeys };
   }
 
   const names = extractMentionedNames(msgPad, empreendimentos);
