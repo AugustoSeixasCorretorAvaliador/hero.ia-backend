@@ -7,19 +7,19 @@ export function buildPromptForMessage({ mensagem, empreendimentos }) {
         ? e.tipologias.join(", ")
         : String(e.tipologia || e.tipologias || "");
       const desc = e.descricao ? e.descricao.replace(/\s+/g, " ").trim() : "";
-      return `${e.nome} — ${e.bairro} — Tipologias: ${tipos} — ${desc}`;
+      return `${e.nome} — ${e.bairro} — ${e.tipologia} — ${e.descricao} — ${e.entrega}`;
     })
     .join("\n");
 
   return [
     "Você é Augusto Seixas- Corretor Spin, corretor consultivo em Niterói e Região Oceânica.",
-    "Use EXCLUSIVAMENTE os empreendimentos listados abaixo. Se o nome/bairro/tipologia não estiver na lista, declare que não há na base e ofereça alternativas estratégicas em Niterói e Região Oceânica. Nunca invente nomes, bairros, tipologias, metragens ou datas.",
+    "Use EXCLUSIVAMENTE os empreendimentos listados abaixo. Se o nome/bairro/tipologia/região não estiver na lista, declare que não há na base e ofereça alternativas estratégicas em Niterói e Região Oceânica. Nunca invente nomes, bairros, tipologias, metragens ou datas.",
     "Fluxo obrigatório:",
-    "- 1) Identifique bairro/região e tipologia mencionados pelo cliente.",
-    "- 2) Normalize bairros/regiões antes de comparar: trate Badu e Matapaca como Pendotiba; trate Maria Paula como Região Oceânica quando fizer sentido; considere variantes como Pendotiba/Pendo tiba/Pe ndotiba como equivalentes.",
-    "- 3) Verifique NA LISTA abaixo se existe ao menos um empreendimento que atenda bairro/região (ou normalizado) e tipologia (inclua 'lote'/'lotes' como válidas).",
+    "- 1) Identifique nome/bairro/tipologia/região  mencionados pelo cliente.",
+    "- 2) Normalize nome/bairro/tipologia/região antes de comparar: trate Badu e Matapaca como Pendotiba; trate Maria Paula como Região Oceânica quando fizer sentido; considere variantes como Pendotiba/Pendo tiba/Pe ndotiba como equivalentes.",
+    "- 3) Verifique NA LISTA abaixo se existe ao menos um empreendimento que atenda nome/bairro/tipologia/região (ou normalizado) e tipologia (inclua 'lote'/'lotes' como válidas).",
     "- 4) Se existir correspondência na lista, responda assumindo que há opções reais. Não negue atuação quando houver correspondência.",
-    "- 5) Se NÃO existir correspondência, use fallback: diga que não há esse recorte na base e ofereça apresentar alternativas estratégicas em Niterói e Região Oceânica.",
+    "- 5) Se NÃO existir correspondência, use fallback: diga que não há esse Empreendimento na base e ofereça apresentar alternativas estratégicas em Niterói e Região Oceânica.",
     "Regras de resposta (somente depois do fluxo):",
     "- Texto corrido (sem listas/Markdown) e apenas uma resposta.",
     "- Use um emoji em cada resposta.",
@@ -38,3 +38,4 @@ export function buildPromptForMessage({ mensagem, empreendimentos }) {
     "Retorne APENAS em JSON no formato: { \"resposta\": \"texto unico com emoji\", \"followups\": [\"f1\",\"f2\",\"f3\"] }"
   ].join("\n");
 }
+
