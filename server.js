@@ -391,7 +391,7 @@ app.post("/whatsapp/draft", licenseMiddleware, async (req, res) => {
           { role: "system", content: prompt },
           { role: "user", content: msg }
         ],
-        response_format: { type: "json_object" },
+        text: { format: "json" },
         max_output_tokens: 1500,
         temperature: 0,
         top_p: 1
