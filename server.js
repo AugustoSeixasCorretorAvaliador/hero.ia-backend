@@ -7,106 +7,107 @@ import { buildPromptForMessage } from "./prompt.js";
 
 dotenv.config();
 
-// ===============================
-// Assinatura e configuração
-// ===============================
-const APPEND_SIGNATURE = String(process.env.APPEND_SIGNATURE || "true").toLowerCase() === "true";
-const DEFAULT_SIGNATURE = `👨🏻‍💼 Augusto Seixas
-🏠 Corretor de Imóveis
-🎯 Spin Vendas
-🎯 Compra • Venda • Aluguel
-📋 CRECI-RJ: 105921
-📲 (21) 98565-3880
-📧 augusto.seixas@spinvendas.com
-🌐 www.spinimoveis.com
+// Aliases de bairro (mapeia menções para o bairro base)
+const BAIRRO_ALIASES = {
+  badu: "pendotiba",
+  matapaca: "pendotiba",
+  "mata paca": "pendotiba",
+  "maria paula": "maria paula"
+};
 
-🔗 Confira mais "Ótimas Oportunidades" na minha Landing Page e redes sociais:
-
-👉 augustoseixascorretor.com.br`;
-
-// Permite configurar via .env com \n para quebras de linha
-const SIGNATURE = (process.env.SIGNATURE || DEFAULT_SIGNATURE).replace(/\\n/g, "\n");
-
-// Modo de anexação: 'closing' (padrão), 'always' ou 'never'
-const APPEND_SIGNATURE_MODE = String(process.env.APPEND_SIGNATURE_MODE || "closing").toLowerCase();
-
-function maskKey(key = "") {
-  if (typeof key !== "string" || key.length === 0) return "<empty>";
-  if (key.length <= 6) return `${key[0]}***${key[key.length - 1]}`;
-  return `${key.slice(0, 3)}***${key.slice(-3)}`;
+function includesWord(haystack, term) {
+  if (!term) return false;
+  const safe = term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const re = new RegExp(`(^|[^a-z0-9])${safe}([^a-z0-9]|$)`);
+  if (term.length < 4) return haystack.includes(term); // tokens curtos: relaxa borda
+  return re.test(haystack);
 }
 
-function sanitize(text = "") {
-  return text
-    .toString()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase()
-    .trim();
+function hasTipologia(e, tipKeys) {
+  if (!tipKeys || tipKeys.length === 0) return false;
+  const tips = Array.isArray(e.tipologia)
+    ? e.tipologia
+    : Array.isArray(e.tipologias)
+    ? e.tipologias
+    : [e.tipologia || e.tipologias || ""];
+  const normTips = tips.map((t) => norm(t));
+  return tipKeys.some((t) => normTips.includes(t));
 }
 
-function isUserClosing(text = "") {
-  const t = sanitize(text);
-  const patterns = [
-    "obrigado",
-    "obrigada",
-    "valeu",
-    "vou pensar",
-    "vou avaliar",
-    "vou considerar",
-    "depois te falo",
-    "te retorno",
-    "mais tarde",
-    "te chamo",
-    "te aviso",
-    "por enquanto nao",
-    "agora nao",
-    "ate mais",
-    "ate breve",
-    "boa noite",
-    "bom dia",
-    "boa tarde"
+function extractTips(msg) {
+  const tipologiaRegexes = [
+    { rx: /(1\s*quarto[s]?|1q\b|1\s*qtos?|1\s*qts?|um\s+quarto)/i, key: "1q" },
+    { rx: /(2\s*quarto[s]?|2q\b|2\s*qtos?|2\s*qts?|dois\s+quartos)/i, key: "2q" },
+    { rx: /(3\s*quarto[s]?|3q\b|3\s*qtos?|3\s*qts?|tres\s+quartos|três\s+quartos)/i, key: "3q" },
+    { rx: /(4\s*quarto[s]?|4q\b|4\s*qtos?|4\s*qts?|4\s*qto|quatro\s+quartos)/i, key: "4q" },
+    { rx: /(studio|st\b|estudio|estúdio)/i, key: "studio" },
+    { rx: /(loft)/i, key: "loft" },
+    { rx: /(cobertura|\bcob\.?\b)/i, key: "cobertura" },
+    { rx: /(lote[s]?|terreno[s]?)/i, key: "lote" }
   ];
-  return patterns.some((p) => t.includes(p));
+
+  return tipologiaRegexes
+    .filter((t) => t.rx.test(msg))
+    .map((t) => norm(t.key));
 }
 
-function isResponseClosing(text = "") {
-  const t = sanitize(text);
-  const patterns = [
-    "de nada",
-    "estou aqui para ajudar",
-    "se precisar",
-    "e so me avisar",
-    "se precisar de mais informacoes",
-    "qualquer duvida",
-    "fico a disposicao",
-    "fico a sua disposicao",
-    "ate breve",
-    "ate logo"
-  ];
-  return patterns.some((p) => t.includes(p));
+function extractMentionedBairros(msgPad) {
+  const found = new Set();
+  // bairros da base
+  empreendimentos.forEach((e) => {
+    const b = norm(e.bairro || "");
+    if (b && includesWord(msgPad, b)) found.add(b);
+  });
+  // aliases
+  Object.entries(BAIRRO_ALIASES).forEach(([alias, target]) => {
+    if (includesWord(msgPad, alias)) found.add(target);
+  });
+  return Array.from(found);
 }
 
-function shouldAppendSignature({ mode, userText, aiText }) {
-  if (mode === "always") return true;
-  if (mode === "never") return false;
-  // closing: só quando usuario encerra OU resposta tem tom de encerramento
-  return isUserClosing(userText) || isResponseClosing(aiText);
+function extractMentionedNames(msgPad) {
+  const matched = [];
+  empreendimentos.forEach((e) => {
+    const nomeNorm = norm(e.nome || "");
+    if (!nomeNorm) return;
+    const tokens = nomeNorm.split(/\s+/).filter(Boolean);
+    const tokenHit = tokens.some((w) => w.length >= 3 && includesWord(msgPad, w));
+    if (includesWord(msgPad, nomeNorm) || tokenHit) {
+      matched.push(e);
+    }
+  });
+  return matched;
 }
 
-/* ===============================
-   App & Middlewares
-================================ */
-const app = express();
-app.use(cors());
-app.use(express.json());
+function findCandidates(msg) {
+  const msgNorm = norm(msg);
+  const msgPad = ` ${msgNorm} `;
 
-/* ===============================
-   OpenAI Client
-================================ */
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
-});
+  const tipsRequested = extractTips(msg);
+  const names = extractMentionedNames(msgPad);
+  if (names.length > 0) {
+    return { list: names, reason: "nome" };
+  }
+
+  const bairros = extractMentionedBairros(msgPad);
+  if (bairros.length > 0) {
+    const bairroMatches = empreendimentos.filter((e) => bairros.includes(norm(e.bairro || "")));
+    if (tipsRequested.length > 0) {
+      const tipFiltered = bairroMatches.filter((e) => hasTipologia(e, tipsRequested));
+      if (tipFiltered.length > 0) {
+        return { list: tipFiltered, reason: "bairro+tip", requestedTips: tipsRequested };
+      }
+    }
+    return { list: bairroMatches, reason: tipsRequested.length > 0 ? "bairro+tip-empty" : "bairro" };
+  }
+
+  if (tipsRequested.length > 0) {
+    const tipMatches = empreendimentos.filter((e) => hasTipologia(e, tipsRequested));
+    return { list: tipMatches, reason: "tip-only", tipOnly: true, requestedTips: tipsRequested };
+  }
+
+  return { list: [], reason: "none" };
+}
 
 /* ===============================
    Licenciamento simples (arquivo JSON)
@@ -321,7 +322,7 @@ function buildFallbackPayload() {
   };
 }
 
-function buildDeterministicPayload(candidates) {
+function buildDeterministicPayload(candidates, { tipOnly = false } = {}) {
   if (!candidates || candidates.length === 0) return null;
   const max = Math.min(candidates.length, 8);
   const picks = candidates.slice(0, max);
@@ -336,8 +337,12 @@ function buildDeterministicPayload(candidates) {
     })
     .join(" | ");
 
+  const lead = tipOnly
+    ? `Separei exemplos com essa tipologia: ${resumo}. Me diz o bairro ou um nome que você queira priorizar? 🙂`
+    : `Encontrei opções reais na base: ${resumo}. Quer que eu detalhe a que mais combina com você ou agendamos uma ligação rápida? 🙂`;
+
   return {
-    resposta: `Encontrei opções reais na base: ${resumo}. Quer que eu detalhe a que mais combina com você ou agendamos uma ligação rápida? 🙂`,
+    resposta: lead,
     followups: [
       "Posso te enviar agora o descritivo do que mais se encaixa no seu perfil.",
       "Se preferir, faço uma call de 5 minutos para tirar dúvidas e comparar opções.",
@@ -370,7 +375,13 @@ app.post("/whatsapp/draft", licenseMiddleware, async (req, res) => {
       return res.status(400).json({ error: "Mensagem inválida" });
     }
 
-    const { list: candidates } = findCandidates(msg);
+    const { list: candidates, tipOnly } = findCandidates(msg);
+
+    if (!candidates || candidates.length === 0) {
+      const payload = buildFallbackPayload();
+      return res.json({ draft: JSON.stringify(payload, null, 0) });
+    }
+
     const prompt = buildPromptForMessage({ mensagem: msg, empreendimentos: candidates });
 
     let payload = null;
@@ -429,7 +440,7 @@ app.post("/whatsapp/draft", licenseMiddleware, async (req, res) => {
     }
 
     if (!payload) {
-      payload = buildDeterministicPayload(candidates) || buildFallbackPayload();
+      payload = buildDeterministicPayload(candidates, { tipOnly }) || buildFallbackPayload();
     }
 
     payload.resposta = removeAISignature(payload.resposta || "");
