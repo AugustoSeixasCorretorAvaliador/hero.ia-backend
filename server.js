@@ -486,4 +486,3 @@ server.on("error", (err) => {
   console.error("Erro no servidor:", err);
   process.exit(1);
 });
-setTimeout(injectButton, 1000);
