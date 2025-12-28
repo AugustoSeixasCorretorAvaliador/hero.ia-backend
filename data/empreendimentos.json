@@ -21,7 +21,8 @@
       "3q"
     ],
     "perfil": [
-      "moradia"
+      "moradia",
+      "investimento"
     ],
     "descricao": "Condomínio completo com lazer",
     "entrega": "A confirmar"
@@ -32,7 +33,10 @@
     "tipologia": [
       "studio"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "JPR | Rua José Maurício Ferraz, 2 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -42,7 +46,10 @@
     "tipologia": [
       "1q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Conviva | Av. Prof. Florestan Fernandes, 75 | Entrega: 2028",
     "entrega": "2028"
   },
@@ -53,7 +60,10 @@
       "1q",
       "2q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Conviva | Av. Prof. Florestan Fernandes, 630 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -63,7 +73,10 @@
     "tipologia": [
       "4q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Céu | Rua José Lobo de Medeiros, 8 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -73,7 +86,10 @@
     "tipologia": [
       "4q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Tresor | Rua Jayme Bittencourt | Entrega: a confirmar",
     "entrega": "A confirmar"
   },
@@ -84,7 +100,10 @@
       "1q",
       "3q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Wrobel | Av. Dr. Geraldo de Melo Ourivio, 1153 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -95,7 +114,10 @@
       "2q",
       "4q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "PDG | Av. Prof. Florestan Fernandes, 1036 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -106,7 +128,10 @@
       "3q",
       "4q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Tecconstru | Av. Prof. Florestan Fernandes, 1 | Entrega: 2026",
     "entrega": "2026"
   },
@@ -117,7 +142,10 @@
       "1q",
       "4q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Itaíba | Av. Dr. Geraldo de Melo Ourivio, 502 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -128,7 +156,10 @@
       "1q",
       "2q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Cury | Rua Cel PM Francisco Spargoli Rocha | Entrega: 2028",
     "entrega": "2028"
   },
@@ -138,7 +169,10 @@
     "tipologia": [
       "2q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Novolar | Avenida Feliciano Sodré, 282 | Entrega: 2027",
     "entrega": "2027"
   },
@@ -148,7 +182,10 @@
     "tipologia": [
       "studio"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Falves | Rua São Sebastião, 30 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -159,7 +196,10 @@
       "1q",
       "2q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Cury | Avenida Visconde do Rio Branco, 220 | Entrega: 2026",
     "entrega": "2026"
   },
@@ -171,7 +211,10 @@
       "2q",
       "3q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Cury | Rua Projetada, 1 | Entrega: a confirmar",
     "entrega": "A confirmar"
   },
@@ -182,7 +225,10 @@
       "3q",
       "4q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Soter | Rua Doutor Armando Lopes, 23 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -192,7 +238,10 @@
     "tipologia": [
       "studio"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Habitare | Rua Juiz Alberto Nader, 11 | Entrega: 2027",
     "entrega": "2027"
   },
@@ -203,7 +252,10 @@
       "1q",
       "2q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Habitare | Rua Santa Cândida, 59 | Entrega: a confirmar",
     "entrega": "A confirmar"
   },
@@ -214,7 +266,10 @@
       "2q",
       "3q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Elvas | Rua Juiz Alberto Nader | Entrega: 2028",
     "entrega": "2028"
   },
@@ -225,7 +280,10 @@
       "1q",
       "2q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Crescer | Rua Desembargador Lima Castro, 245 | Entrega: 2028",
     "entrega": "2028"
   },
@@ -236,7 +294,10 @@
       "1q",
       "3q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "GPCON | Rua Antônio Silva, 7 | Entrega: 2026",
     "entrega": "2026"
   },
@@ -246,7 +307,10 @@
     "tipologia": [
       "2q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "RDR | Avenida Professor João Brasil, 610 | Entrega: 2026",
     "entrega": "2026"
   },
@@ -257,7 +321,10 @@
       "1q",
       "2q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Céu | Rua Mem de Sá, 141 | Entrega: 2026",
     "entrega": "2026"
   },
@@ -268,7 +335,10 @@
       "2q",
       "3q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Bacos | Rua Álvares de Azevedo, 180 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -278,7 +348,10 @@
     "tipologia": [
       "4q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Soter | Rua Presidente Backer, 250 | Entrega: 2026",
     "entrega": "2026"
   },
@@ -289,7 +362,10 @@
       "2q",
       "3q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "ProArt | Rua Doutor Carlos Halfeld, 9 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -300,7 +376,10 @@
       "3q",
       "4q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Tegra | Rua Comendador Queiroz, 80 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -310,7 +389,10 @@
     "tipologia": [
       "studio"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Chead | Av. Almirante Ari Parreiras, 88 | Entrega: 2027",
     "entrega": "2027"
   },
@@ -322,7 +404,10 @@
       "3q",
       "4q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Soter | Rua Presidente Backer, 88 | Entrega: 2028",
     "entrega": "2028"
   },
@@ -333,7 +418,10 @@
       "3q",
       "4q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Soter | Rua Dr. Herotides de Oliveira, 23 | Entrega: 2028",
     "entrega": "2028"
   },
@@ -343,7 +431,10 @@
     "tipologia": [
       "loft"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "TecConstrut | Rua Mariz e Barros, 225 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -353,7 +444,10 @@
     "tipologia": [
       "3q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Falves | Travessa Francisco Dutra, 132 | Entrega: 2028",
     "entrega": "2028"
   },
@@ -363,7 +457,10 @@
     "tipologia": [
       "studio"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Elvas | Rua Álvares de Azevedo, 239 | Entrega: 2027",
     "entrega": "2027"
   },
@@ -373,7 +470,10 @@
     "tipologia": [
       "studio"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Bacos | Rua Doutor Tavares de Macedo, 35 | Entrega: 2028",
     "entrega": "2028"
   },
@@ -385,7 +485,10 @@
       "2q",
       "3q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Soter | Rua Álvares de Azevedo, 185 | Entrega: 2028",
     "entrega": "2028"
   },
@@ -395,7 +498,10 @@
     "tipologia": [
       "studio"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Bacos | Rua Presidente Backer, 74 | Entrega: a confirmar",
     "entrega": "A confirmar"
   },
@@ -406,7 +512,10 @@
       "2q",
       "3q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Bacos | Avenida Sete de Setembro, 56 | Entrega: 2026",
     "entrega": "2026"
   },
@@ -416,7 +525,10 @@
     "tipologia": [
       "studio"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Habitare | Rua Prof. A. P. Q. de Moura, 110 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -427,7 +539,10 @@
       "1q",
       "2q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "ProArt | Rua Ator Paulo Gustavo, 368 | Entrega: 2029",
     "entrega": "A confirmar"
   },
@@ -439,7 +554,10 @@
       "2q",
       "3q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "ProArt | Rua Joaquim Távora, 80 | Entrega: 2025",
     "entrega": "2025"
   },
@@ -450,7 +568,10 @@
       "2q",
       "3q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "João Fortes | Rua Joaquim Távora, 138 | Entrega: 2025",
     "entrega": "2025"
   },
@@ -461,7 +582,10 @@
       "3q",
       "4q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Soter | Praia de Icaraí, 63 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -471,7 +595,10 @@
     "tipologia": [
       "studio"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "ProArt | Rua Presidente Backer, 128 | Entrega: 2026",
     "entrega": "2026"
   },
@@ -482,7 +609,10 @@
       "studio",
       "2q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Soter | Travessa Capitão Zeferino, 90 | Entrega: 2027",
     "entrega": "2027"
   },
@@ -492,7 +622,10 @@
     "tipologia": [
       "studio"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Conviva | Rua Mariz e Barros, 34 | Entrega: a confirmar",
     "entrega": "A confirmar"
   },
@@ -503,7 +636,10 @@
       "1q",
       "2q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Conviva | Rua Doutor Paulo Alves, 78 | Entrega: 2027",
     "entrega": "2027"
   },
@@ -513,7 +649,10 @@
     "tipologia": [
       "loft"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "MRC | Praça Doutor Nilo Peçanha, 132 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -524,7 +663,10 @@
       "3q",
       "4q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Soter | Rua Doutor Pereira Nunes, 132 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -535,7 +677,10 @@
       "2q",
       "3q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Soter | Rua Scylla Souza Ribeiro, 57 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -546,7 +691,10 @@
       "2q",
       "4q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Gafisa | Estrada Francisco da Cruz Nunes, 11722 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -557,7 +705,10 @@
       "2q",
       "3q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "União | Rua Samuel Wainer Filho, 6 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -568,7 +719,10 @@
       "2q",
       "4q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "CALL | Rua Matias Sandri, 813 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -579,7 +733,10 @@
       "2q",
       "4q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Madel | Rua Matias Sandri, 100 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -590,7 +747,10 @@
       "3q",
       "5q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Equipe | Rua Matias Sandri, 1035 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -601,7 +761,10 @@
       "2q",
       "3q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "VL | Rua Samuel Wainer Filho, 1188 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -612,7 +775,10 @@
       "2q",
       "3q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "VL | Rua Samuel Wainer Filho, 611 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -622,7 +788,10 @@
     "tipologia": [
       "studio"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Habitare | Rua Samuel Wainer Filho, 900 | Entrega: 2028",
     "entrega": "2028"
   },
@@ -633,7 +802,10 @@
       "1q",
       "3q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Metta | Estrada Francisco da Cruz Nunes, 11412 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -643,7 +815,10 @@
     "tipologia": [
       "3q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "CEU | Estrada Francisco da Cruz Nunes, 11699 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -655,7 +830,10 @@
       "2q",
       "3q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Medeiros | Est. Francisco da Cruz Nunes, 10512 | Entrega: 2028",
     "entrega": "2028"
   },
@@ -666,7 +844,10 @@
       "2q",
       "3q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "4MX | Rua Madre Mary Marceline, 278 | Entrega: 2027",
     "entrega": "2027"
   },
@@ -677,7 +858,10 @@
       "3q",
       "4q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "— | Rua Ignez Peixoto, 517 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -687,7 +871,10 @@
     "tipologia": [
       "2q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "ProArt | Rua Escrivão Cezar March, 302 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -697,7 +884,10 @@
     "tipologia": [
       "2q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Gacon | Estrada Francisco da Cruz Nunes, 9190 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -708,7 +898,10 @@
       "1q",
       "2q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "ProArt | Ocean Top | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -719,7 +912,10 @@
       "2q",
       "3q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Pinto de Almeida | Estrada Francisco da Cruz Nunes, 2800 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -730,7 +926,10 @@
       "2q",
       "3q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Equipe | Rua Leila Souza Putilini, 147 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -740,7 +939,10 @@
     "tipologia": [
       "3q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Bacos | Estrada Francisco da Cruz Nunes | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -751,7 +953,10 @@
       "2q",
       "3q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Equipe | Rua Dos Pavões | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -761,7 +966,10 @@
     "tipologia": [
       "2q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "União | Rua João de Souza Castelo, 313 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -772,7 +980,10 @@
       "3q",
       "4q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Gacon | Rua São Fábio, 40 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -782,7 +993,10 @@
     "tipologia": [
       "3q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Gacon | Rua Roberto Peixoto, 1 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -793,7 +1007,10 @@
       "2q",
       "3q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Equipe | Rua Vereador Agostinho de Paula Santos | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -803,7 +1020,10 @@
     "tipologia": [
       "4q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Ramabe | Rua Dos Pavões | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -814,7 +1034,10 @@
       "1q",
       "3q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Fernandes Maciel | Rua Santa Rosa, 82 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -825,7 +1048,10 @@
       "3q",
       "4q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Fernandes Maciel | Rua Presidente João Pessoa, 350 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -836,7 +1062,10 @@
       "1q",
       "4q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Soter | Rua Professor Miguel Couto, 333 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -847,7 +1076,10 @@
       "2q",
       "3q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Fernandes Maciel | Rua Santos Dumont, 40 | Entrega: 2025",
     "entrega": "2025"
   },
@@ -858,7 +1090,10 @@
       "1q",
       "2q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Pinto de Almeida | Estrada Caetano Monteiro, 4009 | Entrega: a confirmar",
     "entrega": "A confirmar"
   },
@@ -868,7 +1103,10 @@
     "tipologia": [
       "—"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Pinto de Almeida | Estrada Caetano Monteiro, 4087 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -878,7 +1116,10 @@
     "tipologia": [
       "2q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "União | Estrada Caetano Monteiro, 3825 | Entrega: a confirmar",
     "entrega": "A confirmar"
   },
@@ -889,7 +1130,10 @@
       "2q",
       "4q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Pinto de Almeida | Estrada Caetano Monteiro, 3910 | Entrega: a confirmar",
     "entrega": "A confirmar"
   },
@@ -899,7 +1143,10 @@
     "tipologia": [
       "lotes"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "ANASA | Estrada Monan Grande, 820 | Entrega: Pronto",
     "entrega": "Entregue"
   },
@@ -910,7 +1157,10 @@
       "2q",
       "3q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "JPR | Rua João Batista, 450 | Entrega: a confirmar",
     "entrega": "A confirmar"
   },
@@ -921,7 +1171,10 @@
       "2q",
       "3q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Pinto de Almeida | Estrada Caetano Monteiro, 1032 | Entrega: a confirmar",
     "entrega": "A confirmar"
   },
@@ -932,7 +1185,10 @@
       "2q",
       "3q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Pinto de Almeida | Estrada Caetano Monteiro, 391 | Entrega: a confirmar",
     "entrega": "A confirmar"
   },
@@ -943,7 +1199,10 @@
       "1q",
       "3q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Céu | Av. Almirante Tamandaré, 51 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -954,7 +1213,10 @@
       "1q",
       "2q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "PA5 | Rua Pietro Farsoun, 158 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -965,7 +1227,10 @@
       "1q",
       "3q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Equipe | Rua Doutor João Valentim Tavares, 69 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -975,7 +1240,10 @@
     "tipologia": [
       "studio"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Conviva | Rua Lisandro Motta, 1 | Entrega: 2026",
     "entrega": "2026"
   },
@@ -986,7 +1254,10 @@
       "1q",
       "2q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Céu | Rua Doutor Ernani Luiz da Cunha, 268 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -997,7 +1268,10 @@
       "2q",
       "3q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "ProArt | Rua Com. Manuel de Azevedo Falcão, 135 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -1008,7 +1282,10 @@
       "2q",
       "3q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "PA5 | Rua Canajé Malta, 57 | Entrega: 2028",
     "entrega": "2028"
   },
@@ -1019,7 +1296,10 @@
       "1q",
       "2q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Céu | Rua Milton da Rocha Soares, 6 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -1030,7 +1310,10 @@
       "3q",
       "4q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Equipe | Praia Piratininga, 500 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -1040,7 +1323,10 @@
     "tipologia": [
       "3q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Céu | Rua Doutor João Valentim Tavares, 33 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -1051,7 +1337,10 @@
       "2q",
       "3q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "VL | Rua Doutor Celso Dias Gomes, 161 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -1062,7 +1351,10 @@
       "1q",
       "2q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "RAMABE | Rua Comendador Thomaz Lima, 51 | Entrega: 2028",
     "entrega": "2028"
   },
@@ -1073,7 +1365,10 @@
       "2q",
       "4q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Itaíba | Av. Almirante Tamandaré, 3394 | Entrega: 2026",
     "entrega": "2026"
   },
@@ -1084,7 +1379,10 @@
       "2q",
       "3q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "PDG | Av. Almirante Tamandaré, 4400 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -1095,7 +1393,10 @@
       "2q",
       "4q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "ProArt | Rua Jorn. Prudêncio Luiz F. Travassos, 49 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -1105,7 +1406,10 @@
     "tipologia": [
       "1q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Falves | Rua Professor Manoel José Ferreira, 141 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -1115,7 +1419,10 @@
     "tipologia": [
       "4q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Tresor | Rua Dr. Abdo Abi-Ramia, 91 | Entrega: a confirmar",
     "entrega": "A confirmar"
   },
@@ -1126,7 +1433,10 @@
       "1q",
       "3q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Prêmio | Estrada Frei Orlando, 566 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -1137,7 +1447,10 @@
       "1q",
       "3q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "União | Rua Doutor Celso Dias Gomes, 80 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -1148,7 +1461,10 @@
       "3q",
       "4q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Itaíba | Rua Mar. Raul de Albuquerque, 42 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -1159,7 +1475,10 @@
       "2q",
       "3q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Itaíba | Rua Roma, 360 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -1170,7 +1489,10 @@
       "3q",
       "4q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "LRM | Av. Almirante Tamandaré, 2866 | Entrega: 2026",
     "entrega": "2026"
   },
@@ -1181,7 +1503,10 @@
       "3q",
       "4q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Equipe | Rua Manuel Pacheco de Carvalho, 147 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -1192,7 +1517,10 @@
       "3q",
       "4q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Itaíba | Av. Almirante Tamandaré, 171 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -1203,7 +1531,10 @@
       "2q",
       "4q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Céu | Rua Antônio Augusto da Paz, 17 | Entrega: 2027",
     "entrega": "2027"
   },
@@ -1214,7 +1545,10 @@
       "2q",
       "3q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Céu | Av. Almirante Tamandaré, 57 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -1225,7 +1559,10 @@
       "2q",
       "3q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Construtora Medeiros | Rua Jorn. Francisco Rodrigues de Miranda, 71 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -1235,7 +1572,10 @@
     "tipologia": [
       "loft"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Céu | Rua Pietro Farsoun, 87 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -1245,7 +1585,10 @@
     "tipologia": [
       "2q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Construtora Medeiros | Rua Doutor Antônio Vaz Cavalcanti, 107 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -1255,7 +1598,10 @@
     "tipologia": [
       "2q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Ramabe | Rua Orestes Barbosa, 116 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -1267,7 +1613,10 @@
       "2q",
       "3q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Meta | Rua Dra. Namir Peralta, 113 | Entrega: 2028",
     "entrega": "2028"
   },
@@ -1278,7 +1627,10 @@
       "1q",
       "3q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Metta | Rua Raul Corrêa de Araújo, Lt. 20 | Entrega: 2026",
     "entrega": "2026"
   },
@@ -1288,7 +1640,10 @@
     "tipologia": [
       "studio"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Céu | Rua Antônio Augusto da Paz | Entrega: 2028",
     "entrega": "2028"
   },
@@ -1299,7 +1654,10 @@
       "2q",
       "3q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "JPR | Rua Siqueira Campos, 55 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -1310,7 +1668,10 @@
       "2q",
       "3q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "LRM | Rua Doutor Sardinha, 183 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -1320,7 +1681,10 @@
     "tipologia": [
       "2q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Bacos | Rua Doutor Sardinha, 207 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -1331,7 +1695,10 @@
       "2q",
       "3q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Pinto de Almeida | Rua Professor Otacílio, 133 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -1342,7 +1709,10 @@
       "1q",
       "2q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Cury | Rua Doutor Mario Vianna, 451 | Entrega: 2025",
     "entrega": "2025"
   },
@@ -1353,7 +1723,10 @@
       "1q",
       "2q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "ProArt | Rua Doutor Sardinha, 164 | Entrega: 2027",
     "entrega": "2027"
   },
@@ -1364,7 +1737,10 @@
       "2q",
       "3q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Debens | Rua Doutor Sardinha, 210 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -1375,7 +1751,10 @@
       "2q",
       "3q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Bacos | Rua Professor Otacilio, 35 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -1386,7 +1765,10 @@
       "2q",
       "3q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Joama | Rua Newton Prado, 38 | Entrega: 2028",
     "entrega": "2028"
   },
@@ -1397,7 +1779,10 @@
       "1q",
       "2q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "GPCOM | Travessa Martins Torres, 154 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -1408,7 +1793,10 @@
       "2q",
       "3q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Tegra | Avenida Visconde do Rio Branco, 731 | Entrega: Entregue",
     "entrega": "Entregue"
   },
@@ -1419,7 +1807,10 @@
       "4q",
       "3q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "MRC | Rua Tapuias, nº 115 | Entrega: 2026",
     "entrega": "2026"
   },
@@ -1430,7 +1821,10 @@
       "1q",
       "3q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Fernandes Maciel | Rua Barbosa, 303 | Entrega: 2028",
     "entrega": "2028"
   },
@@ -1440,7 +1834,10 @@
     "tipologia": [
       "studio"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Bacos | Avenida Quintino Bocaiúva, 241 | Entrega: 2026",
     "entrega": "2026"
   },
@@ -1451,7 +1848,10 @@
       "3q",
       "4q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Bacos | Rua Major Froes, 255 | Entrega: 2027",
     "entrega": "2027"
   },
@@ -1462,7 +1862,10 @@
       "2q",
       "3q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Elvas - Krion | Av Rui Barbosa 252 | Entrega: 2026",
     "entrega": "2026"
   },
@@ -1472,7 +1875,10 @@
     "tipologia": [
       "1q"
     ],
-    "perfil": [],
+    "perfil": [
+      "moradia",
+      "investimento"
+    ],
     "descricao": "Conviva | Rua Antonio Cotta, 28 | Entrega: 2028",
     "entrega": "2028"
   },
