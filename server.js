@@ -130,7 +130,7 @@ function extractMentionedBairros(msgPad, empreendimentos) {
   empreendimentos.forEach((e) => {
     const b = norm(e.bairro || "");
     if (!b) return;
-    if (includesWord(msgPad, b) || msgPad.includes(` ${b} `) || msgPad.includes(b)) {
+    if (includesWord(msgPad, b)) {
       found.add(b);
     }
   });
