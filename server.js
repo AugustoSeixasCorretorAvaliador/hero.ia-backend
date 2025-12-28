@@ -219,22 +219,33 @@ function findCandidates(msg) {
     .filter((t) => t.rx.test(msg))
     .map((t) => norm(t.key));
 
-  return empreendimentos.filter((e) => {
-    const bairroNorm = norm(e.bairro || "");
-    const nomeNorm = norm(e.nome || "");
-    const nomeTokens = nomeNorm.split(/\s+/).filter(Boolean);
-    const tips = Array.isArray(e.tipologia)
-      ? e.tipologia.map((t) => norm(t))
-      : Array.isArray(e.tipologias)
-      ? e.tipologias.map((t) => norm(t))
-      : [norm(e.tipologia || e.tipologias || "")];
+  const scored = empreendimentos
+    .map((e) => {
+      const bairroNorm = norm(e.bairro || "");
+      const nomeNorm = norm(e.nome || "");
+      const nomeTokens = nomeNorm.split(/\s+/).filter(Boolean);
+      const tips = Array.isArray(e.tipologia)
+        ? e.tipologia.map((t) => norm(t))
+        : Array.isArray(e.tipologias)
+        ? e.tipologias.map((t) => norm(t))
+        : [norm(e.tipologia || e.tipologias || "")];
 
-    const matchBairro = bairroNorm && (msgNorm.includes(bairroNorm) || matchesAlias(msgNorm, bairroNorm));
-    const matchNome = nomeNorm && (msgNorm.includes(nomeNorm) || nomeTokens.some((w) => w.length >= 3 && msgNorm.includes(w)));
-    const matchTip = tips.some((t) => t && (msgNorm.includes(t) || tipsMentioned.includes(t)));
+      const matchBairro = bairroNorm && (msgNorm.includes(bairroNorm) || matchesAlias(msgNorm, bairroNorm));
+      const matchNome = nomeNorm && (msgNorm.includes(nomeNorm) || nomeTokens.some((w) => w.length >= 3 && msgNorm.includes(w)));
+      const matchTip = tips.some((t) => t && (msgNorm.includes(t) || tipsMentioned.includes(t)));
 
-    return matchBairro || matchNome || matchTip;
-  });
+      // score: prioritize name/bairro; tip alone is lowest
+      let score = 0;
+      if (matchNome) score += 3;
+      if (matchBairro) score += 2;
+      if (matchTip) score += 1;
+
+      return { e, score };
+    })
+    .filter(({ score }) => score > 0)
+    .sort((a, b) => b.score - a.score);
+
+  return scored.map(({ e }) => e);
 }
 
 function buildFallbackPayload() {
