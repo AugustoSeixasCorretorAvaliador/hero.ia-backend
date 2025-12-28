@@ -125,35 +125,6 @@ function includesWord(haystack, term) {
   return re.test(haystack);
 }
 
-function hasTipologia(e, tipKeys) {
-  if (!tipKeys || tipKeys.length === 0) return false;
-  const tips = Array.isArray(e.tipologia)
-    ? e.tipologia
-    : Array.isArray(e.tipologias)
-    ? e.tipologias
-    : [e.tipologia || e.tipologias || ""];
-  const normTips = tips.map((t) => norm(t || ""));
-  const normKeys = tipKeys.map((t) => norm(t || ""));
-  return normKeys.some((t) => normTips.includes(t));
-}
-
-function extractTips(msg) {
-  const tipologiaRegexes = [
-    { rx: /(1\s*quarto[s]?|1q\b|1\s*qtos?|1\s*qts?|um\s+quarto)/i, key: "1q" },
-    { rx: /(2\s*quarto[s]?|2q\b|2\s*qtos?|2\s*qts?|dois\s+quartos)/i, key: "2q" },
-    { rx: /(3\s*quarto[s]?|3q\b|3\s*qtos?|3\s*qts?|tres\s+quartos|três\s+quartos)/i, key: "3q" },
-    { rx: /(4\s*quarto[s]?|4q\b|4\s*qtos?|4\s*qts?|4\s*qto|quatro\s+quartos)/i, key: "4q" },
-    { rx: /(studio|st\b|estudio|estúdio)/i, key: "studio" },
-    { rx: /(loft)/i, key: "loft" },
-    { rx: /(cobertura|\bcob\.?\b)/i, key: "cobertura" },
-    { rx: /(lote[s]?|terreno[s]?)/i, key: "lote" }
-  ];
-
-  return tipologiaRegexes
-    .filter((t) => t.rx.test(msg))
-    .map((t) => norm(t.key));
-}
-
 function extractMentionedBairros(msgPad, empreendimentos) {
   const found = new Set();
   empreendimentos.forEach((e) => {
@@ -288,28 +259,15 @@ function findCandidates(msg) {
   const msgNorm = norm(msg);
   const msgPad = ` ${msgNorm} `;
 
-  const tipsRequested = extractTips(msg);
   const names = extractMentionedNames(msgPad, empreendimentos);
   if (names.length > 0) {
     return { list: names, reason: "nome" };
   }
 
   const bairros = extractMentionedBairros(msgPad, empreendimentos);
-  if (bairros.length > 0 && tipsRequested.length > 0) {
-    const tipFiltered = empreendimentos.filter(
-      (e) => bairros.includes(norm(e.bairro || "")) && hasTipologia(e, tipsRequested)
-    );
-    return { list: tipFiltered, reason: "bairro+tip", requestedTips: tipsRequested, bairros };
-  }
-
   if (bairros.length > 0) {
     const bairroMatches = empreendimentos.filter((e) => bairros.includes(norm(e.bairro || "")));
     return { list: bairroMatches, reason: "bairro", bairros };
-  }
-
-  if (tipsRequested.length > 0) {
-    const tipMatches = empreendimentos.filter((e) => hasTipologia(e, tipsRequested));
-    return { list: tipMatches, reason: "tip-only", tipOnly: true, requestedTips: tipsRequested };
   }
 
   return { list: [], reason: "none" };
@@ -327,11 +285,9 @@ function buildFallbackPayload() {
   };
 }
 
-function buildDeterministicPayload(candidates, { tipOnly = false } = {}) {
+function buildDeterministicPayload(candidates) {
   if (!candidates || candidates.length === 0) return null;
-  const max = Math.min(candidates.length, 8);
-  const picks = candidates.slice(0, max);
-  const resumo = picks
+  const resumo = candidates
     .map((e) => {
       const tipos = Array.isArray(e.tipologia)
         ? e.tipologia.join(", ")
@@ -344,9 +300,7 @@ function buildDeterministicPayload(candidates, { tipOnly = false } = {}) {
     })
     .join(" | ");
 
-  const lead = tipOnly
-    ? `Separei exemplos com essa tipologia: ${resumo}. Me diz o bairro ou um nome que você queira priorizar? 🙂`
-    : `Encontrei opções reais na base: ${resumo}. Quer que eu detalhe a que mais combina com você ou agendamos uma ligação rápida? 🙂`;
+  const lead = `Encontrei opções reais na base: ${resumo}. Quer que eu detalhe a que mais combina com você ou agendamos uma ligação rápida? 🙂`;
 
   return {
     resposta: lead,
@@ -381,11 +335,10 @@ app.post("/whatsapp/draft", licenseMiddleware, async (req, res) => {
       return res.status(400).json({ error: "Mensagem inválida" });
     }
 
-    const { list: candidates, tipOnly, reason, requestedTips, bairros } = findCandidates(msg);
+    const { list: candidates, reason, bairros } = findCandidates(msg);
     console.log("[findCandidates]", {
       reason,
       bairros,
-      requestedTips,
       total: candidates?.length,
       sample: (candidates || []).slice(0, 5).map((e) => ({ nome: e.nome, bairro: e.bairro, tipologia: e.tipologia || e.tipologias }))
     });
@@ -452,7 +405,7 @@ app.post("/whatsapp/draft", licenseMiddleware, async (req, res) => {
     }
 
     if (!payload) {
-      payload = buildDeterministicPayload(candidates, { tipOnly }) || buildFallbackPayload();
+      payload = buildDeterministicPayload(candidates) || buildFallbackPayload();
     }
 
     payload.resposta = removeAISignature(payload.resposta || "");
