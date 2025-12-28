@@ -163,6 +163,9 @@ function extractMentionedBairros(msgPad, empreendimentos) {
   Object.entries(BAIRRO_ALIASES).forEach(([alias, target]) => {
     if (includesWord(msgPad, alias)) found.add(target);
   });
+  ["icarai", "icaria", "niteroi"].forEach((v) => {
+    if (includesWord(msgPad, v)) found.add(v === "icaria" ? "icarai" : v);
+  });
   return Array.from(found);
 }
 
@@ -172,7 +175,7 @@ function extractMentionedNames(msgPad, empreendimentos) {
     const nomeNorm = norm(e.nome || "");
     if (!nomeNorm) return;
     const tokens = nomeNorm.split(/\s+/).filter(Boolean);
-    const tokenHit = tokens.some((w) => w.length >= 3 && includesWord(msgPad, w));
+    const tokenHit = tokens.some((w) => w.length >= 2 && includesWord(msgPad, w));
     if (includesWord(msgPad, nomeNorm) || tokenHit) {
       matched.push(e);
     }
