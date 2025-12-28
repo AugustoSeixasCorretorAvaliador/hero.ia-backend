@@ -7,6 +7,107 @@ import { buildPromptForMessage } from "./prompt.js";
 
 dotenv.config();
 
+// ===============================
+// Assinatura e configuração
+// ===============================
+const APPEND_SIGNATURE = String(process.env.APPEND_SIGNATURE || "true").toLowerCase() === "true";
+const DEFAULT_SIGNATURE = `👨🏻‍💼 Augusto Seixas
+🏠 Corretor de Imóveis
+🎯 Spin Vendas
+🎯 Compra • Venda • Aluguel
+📋 CRECI-RJ: 105921
+📲 (21) 98565-3880
+📧 augusto.seixas@spinvendas.com
+🌐 www.spinimoveis.com
+
+🔗 Confira mais "Ótimas Oportunidades" na minha Landing Page e redes sociais:
+
+👉 augustoseixascorretor.com.br`;
+
+// Permite configurar via .env com \n para quebras de linha
+const SIGNATURE = (process.env.SIGNATURE || DEFAULT_SIGNATURE).replace(/\\n/g, "\n");
+
+// Modo de anexação: 'closing' (padrão), 'always' ou 'never'
+const APPEND_SIGNATURE_MODE = String(process.env.APPEND_SIGNATURE_MODE || "closing").toLowerCase();
+
+function maskKey(key = "") {
+  if (typeof key !== "string" || key.length === 0) return "<empty>";
+  if (key.length <= 6) return `${key[0]}***${key[key.length - 1]}`;
+  return `${key.slice(0, 3)}***${key.slice(-3)}`;
+}
+
+function sanitize(text = "") {
+  return text
+    .toString()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .trim();
+}
+
+function isUserClosing(text = "") {
+  const t = sanitize(text);
+  const patterns = [
+    "obrigado",
+    "obrigada",
+    "valeu",
+    "vou pensar",
+    "vou avaliar",
+    "vou considerar",
+    "depois te falo",
+    "te retorno",
+    "mais tarde",
+    "te chamo",
+    "te aviso",
+    "por enquanto nao",
+    "agora nao",
+    "ate mais",
+    "ate breve",
+    "boa noite",
+    "bom dia",
+    "boa tarde"
+  ];
+  return patterns.some((p) => t.includes(p));
+}
+
+function isResponseClosing(text = "") {
+  const t = sanitize(text);
+  const patterns = [
+    "de nada",
+    "estou aqui para ajudar",
+    "se precisar",
+    "e so me avisar",
+    "se precisar de mais informacoes",
+    "qualquer duvida",
+    "fico a disposicao",
+    "fico a sua disposicao",
+    "ate breve",
+    "ate logo"
+  ];
+  return patterns.some((p) => t.includes(p));
+}
+
+function shouldAppendSignature({ mode, userText, aiText }) {
+  if (mode === "always") return true;
+  if (mode === "never") return false;
+  // closing: só quando usuario encerra OU resposta tem tom de encerramento
+  return isUserClosing(userText) || isResponseClosing(aiText);
+}
+
+/* ===============================
+   App & Middlewares
+================================ */
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+/* ===============================
+   OpenAI Client
+================================ */
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY
+});
+
 // Aliases de bairro (mapeia menções para o bairro base)
 const BAIRRO_ALIASES = {
   badu: "pendotiba",
