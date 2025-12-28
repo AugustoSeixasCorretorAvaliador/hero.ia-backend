@@ -132,8 +132,9 @@ function hasTipologia(e, tipKeys) {
     : Array.isArray(e.tipologias)
     ? e.tipologias
     : [e.tipologia || e.tipologias || ""];
-  const normTips = tips.map((t) => norm(t));
-  return tipKeys.some((t) => normTips.includes(t));
+  const normTips = tips.map((t) => norm(t || ""));
+  const normKeys = tipKeys.map((t) => norm(t || ""));
+  return normKeys.some((t) => normTips.includes(t));
 }
 
 function extractTips(msg) {
@@ -373,7 +374,8 @@ app.post("/whatsapp/draft", licenseMiddleware, async (req, res) => {
       return res.status(400).json({ error: "Mensagem inválida" });
     }
 
-    const { list: candidates, tipOnly } = findCandidates(msg);
+    const { list: candidates, tipOnly, reason, requestedTips } = findCandidates(msg);
+    console.log("[findCandidates]", { reason, requestedTips, total: candidates?.length, sample: (candidates || []).slice(0, 3).map((e) => e.nome) });
 
     if (!candidates || candidates.length === 0) {
       const payload = buildFallbackPayload();
