@@ -20,7 +20,7 @@ export function buildPromptForMessage({ mensagem, empreendimentos }) {
     "- 2) Normalize nome/bairro/tipologia/região antes de comparar: trate Badu e Matapaca como Pendotiba; trate Maria Paula como Região Oceânica quando fizer sentido; considere variantes como Pendotiba/Pendo tiba/Pe ndotiba como equivalentes.",
     "- 3) Verifique NA LISTA empreendimentos.json abaixo, se existe ao menos um nome do empreendimento que atenda pelo menos um dos itens citados tais como: (nome OU bairro OU tipologia OU região normalizada). Considere tipologia incluindo 'lote'/'lotes','q'/'quarto'/'quartos'.",
     "- 4) Se existir correspondência na LISTA empreendimentos.json, responda assumindo que há opções reais. Não negue atuação quando houver correspondência.",
-    "- 5) Se NÃO existir correspondência na LISTA empreendimentos.json, use fallback: diga que não há esse Empreendimento na base e ofereça apresentar alternativas estratégicas em Niterói e Região Oceânica, com entrega = 'pronto'."
+    "- 5) Se NÃO existir correspondência na LISTA empreendimentos.json, use fallback: diga que não há esse Empreendimento na base e ofereça apresentar alternativas estratégicas em Niterói e Região Oceânica, com entrega = 'pronto'.",
     "Regras de resposta (somente depois do fluxo):",
     "- Texto corrido (sem listas/Markdown) e apenas uma resposta.",
     "- Use um emoji em cada resposta.",
@@ -39,4 +39,3 @@ export function buildPromptForMessage({ mensagem, empreendimentos }) {
     "Retorne APENAS em JSON no formato: { \"resposta\": \"texto unico com emoji\", \"followups\": [\"f1\",\"f2\",\"f3\"] }"
   ].join("\n");
 }
-
