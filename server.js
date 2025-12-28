@@ -235,42 +235,49 @@ function findCandidates(msg) {
     .filter((t) => t.rx.test(msg))
     .map((t) => norm(t.key));
 
-  const scored = empreendimentos
-    .map((e) => {
-      const bairroNorm = norm(e.bairro || "");
-      const nomeNorm = norm(e.nome || "");
-      const nomeTokens = nomeNorm.split(/\s+/).filter(Boolean);
-      const tips = Array.isArray(e.tipologia)
-        ? e.tipologia.map((t) => norm(t))
-        : Array.isArray(e.tipologias)
-        ? e.tipologias.map((t) => norm(t))
-        : [norm(e.tipologia || e.tipologias || "")];
+  const mapped = empreendimentos.map((e) => {
+    const bairroNorm = norm(e.bairro || "");
+    const nomeNorm = norm(e.nome || "");
+    const nomeTokens = nomeNorm.split(/\s+/).filter(Boolean);
+    const tips = Array.isArray(e.tipologia)
+      ? e.tipologia.map((t) => norm(t))
+      : Array.isArray(e.tipologias)
+      ? e.tipologias.map((t) => norm(t))
+      : [norm(e.tipologia || e.tipologias || "")];
 
-      const matchBairro =
-        bairroNorm &&
-        (includesWord(msgNormClean, bairroNorm) || matchesAlias(msgNormClean, bairroNorm));
-      const matchNome =
-        nomeNorm &&
-        (includesWord(msgNormClean, nomeNorm) || nomeTokens.some((w) => w.length >= 3 && includesWord(msgNormClean, w)));
-      const matchTip = tips.some((t) => t && (msgNorm.includes(t) || tipsMentioned.includes(t)));
+    const entregaNorm = norm(e.entrega || "");
 
-      // Se o usuário citou bairro, só vale se bateu bairro; idem para nome
-      if ((mentionedBairro && !matchBairro) || (mentionedNome && !matchNome)) {
-        return { e, score: 0 };
-      }
+    const matchBairro =
+      bairroNorm &&
+      (includesWord(msgNormClean, bairroNorm) || matchesAlias(msgNormClean, bairroNorm));
+    const matchNome =
+      nomeNorm &&
+      (includesWord(msgNormClean, nomeNorm) || nomeTokens.some((w) => w.length >= 3 && includesWord(msgNormClean, w)));
+    const matchTip = tips.some((t) => t && (msgNorm.includes(t) || tipsMentioned.includes(t)));
 
-      // score: prioritize name/bairro; tip alone é o menor peso
-      let score = 0;
-      if (matchNome) score += 3;
-      if (matchBairro) score += 2;
-      if (matchTip) score += 1;
+    const matchEntrega =
+      entregaNorm &&
+      (includesWord(msgNormClean, entregaNorm) || /20\d{2}/.test(msgNorm) && entregaNorm === msgNorm.match(/20\d{2}/)?.[0]);
 
-      return { e, score };
-    })
-    .filter(({ score }) => score > 0)
-    .sort((a, b) => b.score - a.score);
+    return { e, matchNome, matchBairro, matchTip, matchEntrega };
+  });
 
-  return scored.map(({ e }) => e);
+  // Hierarquia: nome > bairro > tipologia > entrega
+  const byNome = mapped.filter((m) => m.matchNome).map((m) => m.e);
+  if (byNome.length > 0) return byNome;
+  if (mentionedNome && byNome.length === 0) return [];
+
+  const byBairro = mapped.filter((m) => m.matchBairro).map((m) => m.e);
+  if (byBairro.length > 0) return byBairro;
+  if (mentionedBairro && byBairro.length === 0) return [];
+
+  const byTip = mapped.filter((m) => m.matchTip).map((m) => m.e);
+  if (!mentionedBairro && byTip.length > 0) return byTip;
+
+  const byEntrega = mapped.filter((m) => m.matchEntrega).map((m) => m.e);
+  if (!mentionedBairro && byEntrega.length > 0) return byEntrega;
+
+  return [];
 }
 
 function buildFallbackPayload() {
