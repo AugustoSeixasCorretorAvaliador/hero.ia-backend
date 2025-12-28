@@ -210,7 +210,7 @@ function findCandidates(msg) {
   function includesWord(haystack, term) {
     if (!term) return false;
     const safe = term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    const re = new RegExp(`(^|\\s)${safe}(\\s|$)`);
+    const re = new RegExp(`(^|[^a-z0-9])${safe}([^a-z0-9]|$)`);
     return re.test(haystack);
   }
 
