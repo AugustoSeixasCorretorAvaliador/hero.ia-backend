@@ -158,7 +158,10 @@ function extractMentionedBairros(msgPad, empreendimentos) {
   const found = new Set();
   empreendimentos.forEach((e) => {
     const b = norm(e.bairro || "");
-    if (b && includesWord(msgPad, b)) found.add(b);
+    if (!b) return;
+    if (includesWord(msgPad, b) || msgPad.includes(` ${b} `) || msgPad.includes(b)) {
+      found.add(b);
+    }
   });
   Object.entries(BAIRRO_ALIASES).forEach(([alias, target]) => {
     if (includesWord(msgPad, alias)) found.add(target);
