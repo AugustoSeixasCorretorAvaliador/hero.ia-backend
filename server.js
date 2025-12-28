@@ -204,6 +204,8 @@ function matchesAlias(msgNorm, bairroNorm) {
 
 function findCandidates(msg) {
   const msgNorm = norm(msg);
+  // Evita falso-positivo de substring "...piratin-inga" (Piratininga) sendo lido como Ingá
+  const msgNormClean = msgNorm.replace(/piratininga/g, "piratininga ");
   const tipologiaRegexes = [
     { rx: /(1\s*quarto[s]?|1q\b|um\s+quarto)/i, key: "1q" },
     { rx: /(2\s*quarto[s]?|2q\b|dois\s+quartos)/i, key: "2q" },
@@ -230,8 +232,12 @@ function findCandidates(msg) {
         ? e.tipologias.map((t) => norm(t))
         : [norm(e.tipologia || e.tipologias || "")];
 
-      const matchBairro = bairroNorm && (msgNorm.includes(bairroNorm) || matchesAlias(msgNorm, bairroNorm));
-      const matchNome = nomeNorm && (msgNorm.includes(nomeNorm) || nomeTokens.some((w) => w.length >= 3 && msgNorm.includes(w)));
+      const matchBairro =
+        bairroNorm &&
+        (msgNormClean.includes(bairroNorm) || matchesAlias(msgNormClean, bairroNorm));
+      const matchNome =
+        nomeNorm &&
+        (msgNormClean.includes(nomeNorm) || nomeTokens.some((w) => w.length >= 3 && msgNormClean.includes(w)));
       const matchTip = tips.some((t) => t && (msgNorm.includes(t) || tipsMentioned.includes(t)));
 
       // score: prioritize name/bairro; tip alone is lowest
