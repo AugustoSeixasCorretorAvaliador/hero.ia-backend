@@ -7,7 +7,8 @@ export function buildPromptForMessage({ mensagem, empreendimentos }) {
         ? e.tipologias.join(", ")
         : String(e.tipologia || e.tipologias || "");
       const desc = e.descricao ? e.descricao.replace(/\s+/g, " ").trim() : "";
-      return `${e.nome} — ${e.bairro} — ${e.tipologia} — ${e.descricao} — ${e.entrega}`;
+      const entrega = e.entrega || "a confirmar";
+      return `${e.nome} — ${e.bairro} — Tipologias: ${tipos} — ${desc} — Entrega: ${entrega}`;
     })
     .join("\n");
 
