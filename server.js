@@ -292,8 +292,10 @@ function findCandidates(msg) {
 
   const byBairroMatches = mapped.filter((m) => m.matchBairro);
   if (byBairroMatches.length > 0) {
-    byBairroMatches.sort((a, b) => Number(b.matchTip) - Number(a.matchTip) || Number(b.matchEntrega) - Number(a.matchEntrega));
-    return { list: byBairroMatches.map((m) => m.e), usedFullBase: false };
+    const withTip = byBairroMatches.filter((m) => m.matchTip);
+    const pool = withTip.length > 0 ? withTip : byBairroMatches;
+    pool.sort((a, b) => Number(b.matchTip) - Number(a.matchTip) || Number(b.matchEntrega) - Number(a.matchEntrega));
+    return { list: pool.map((m) => m.e), usedFullBase: false };
   }
   if (mentionedBairro && byBairroMatches.length === 0) return { list: empreendimentos, usedFullBase: true };
 
