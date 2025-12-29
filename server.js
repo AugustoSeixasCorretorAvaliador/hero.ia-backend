@@ -133,10 +133,10 @@ function extractTipKeys(msgNorm) {
   const keys = [];
   if (/\b(studio|studios)\b/.test(msgNorm)) keys.push("studio");
   if (/\bloft\b/.test(msgNorm)) keys.push("loft");
-  if (/\b1\s*q(uarto)?s?\b/.test(msgNorm)) keys.push("1q");
-  if (/\b2\s*q(uarto)?s?\b/.test(msgNorm)) keys.push("2q");
-  if (/\b3\s*q(uarto)?s?\b/.test(msgNorm)) keys.push("3q");
-  if (/\b4\s*q(uarto)?s?\b/.test(msgNorm)) keys.push("4q");
+  if (/(1\s*q(uarto)?s?|1\s*qts?|1\s*dorm(itorio)?s?|1\s*d)\b/.test(msgNorm)) keys.push("1q");
+  if (/(2\s*q(uarto)?s?|2\s*qts?|2\s*dorm(itorio)?s?|2\s*d)\b/.test(msgNorm)) keys.push("2q");
+  if (/(3\s*q(uarto)?s?|3\s*qts?|3\s*dorm(itorio)?s?|3\s*d)\b/.test(msgNorm)) keys.push("3q");
+  if (/(4\s*q(uarto)?s?|4\s*qts?|4\s*dorm(itorio)?s?|4\s*d)\b/.test(msgNorm)) keys.push("4q");
   return keys;
 }
 
@@ -274,7 +274,14 @@ try {
 
 // Normalização utilitária
 function norm(s = "") {
-  return s.toString().normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+  return s
+    .toString()
+    .replace(/\u00a0/g, " ") // NBSP -> espaço normal
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 // Motor determinístico: nome > bairro > tipologia
@@ -300,13 +307,13 @@ function findCandidates(msg) {
     return { list: names, reason: "nome" };
   }
 
-  return { list: [], reason: "none" };
+  return { list: [], reason: "none", tipKeys, msgNorm };
 }
 
 function buildFallbackPayload() {
   return {
     resposta:
-      "Não entendi o nome do empreendimento ou o bairro para listar as disponibilidades. Me diz o nome ou o bairro que prefere e a tipologia (ex: studio, 2q, 3q, 4q) para eu puxar as opções certas. 😊",
+      "Perfeito. Para eu te direcionar com precisão, me diga, por favor, o nome do empreendimento ou o bairro com a tipologia (ex: studio, 2q, 3q, 4q). Assim, consigo te apresentar as opções mais adequadas dos empreendimentos. 😊",
     followups: [
       "Pode me dizer agora o nome ou bairro e a tipologia (studio, 2q, 3q, 4q)?",
       "Me passa o bairro favorito que eu puxo em segundos as opções certas.",
@@ -317,20 +324,47 @@ function buildFallbackPayload() {
 
 function buildDeterministicPayload(candidates) {
   if (!candidates || candidates.length === 0) return null;
-  const resumo = candidates
-    .map((e) => {
-      const tipos = Array.isArray(e.tipologia)
-        ? e.tipologia.join(", ")
-        : Array.isArray(e.tipologias)
-        ? e.tipologias.join(", ")
-        : String(e.tipologia || e.tipologias || "");
-      const entrega = e.entrega || "a confirmar";
-      const desc = (e.descricao || "").replace(/\s+/g, " ").trim();
-      return `${e.nome} — Bairro: ${e.bairro} — Tipologias: ${tipos} — Entrega: ${entrega} — Descrição: ${desc}`;
-    })
-    .join(" | ");
+  const humanizeList = (arr) => {
+    if (!Array.isArray(arr) || arr.length === 0) return "";
+    if (arr.length === 1) return String(arr[0]);
+    const head = arr.slice(0, -1).join(", ");
+    return `${head} e ${arr[arr.length - 1]}`;
+  };
 
-  const lead = `Encontrei opções reais na base: ${resumo}. Quer que eu detalhe a que mais combina com você ou agendamos uma ligação rápida? 🙂`;
+  const blocks = candidates.map((e) => {
+    const tiposRaw = Array.isArray(e.tipologia)
+      ? e.tipologia
+      : Array.isArray(e.tipologias)
+      ? e.tipologias
+      : String(e.tipologia || e.tipologias || "")
+          .split(",")
+          .map((t) => t.trim())
+          .filter(Boolean);
+
+    const tipos = humanizeList(tiposRaw);
+    const entrega = e.entrega || "a confirmar";
+    const desc = (e.descricao || "").replace(/\s+/g, " ").trim();
+
+    return [
+      "* " + e.nome,
+      "* " + (e.bairro || "Bairro não informado"),
+      tipos ? "* Tipologias: " + tipos : "",
+      desc ? "* Descrição: " + desc : "",
+      "* Previsão de entrega: " + entrega
+    ]
+      .filter(Boolean)
+      .join("\n");
+  });
+
+  const lead = [
+    "Perfeito. Seguem as informações:",
+    "",
+    blocks.join("\n\n"),
+    "",
+    "Se preferir, te envio E-Book e já podemos agendar uma ligação rápida ou por vídeo, explico melhor o projeto e combinamos uma visita para escolher a unidade mais adequada ao seu perfil. Seu interesse seria para moradia ou investimento? 🙂"
+  ]
+    .filter(Boolean)
+    .join("\n");
 
   return {
     resposta: lead,
@@ -365,13 +399,16 @@ app.post("/whatsapp/draft", licenseMiddleware, async (req, res) => {
       return res.status(400).json({ error: "Mensagem inválida" });
     }
 
-    const { list: candidates, reason, bairros } = findCandidates(msg);
-    console.log("[findCandidates]", {
+    const { list: candidates, reason, bairros, tipKeys, msgNorm } = findCandidates(msg);
+    const logPayload = {
       reason,
       bairros,
+      tipKeys,
+      msgNorm,
       total: candidates?.length,
       sample: (candidates || []).slice(0, 5).map((e) => ({ nome: e.nome, bairro: e.bairro, tipologia: e.tipologia || e.tipologias }))
-    });
+    };
+    console.log("[findCandidates]", logPayload);
 
     if (!candidates || candidates.length === 0) {
       const payload = buildFallbackPayload();

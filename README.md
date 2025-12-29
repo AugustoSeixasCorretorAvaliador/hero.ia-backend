@@ -27,5 +27,5 @@
 - Variáveis principais: `OPENAI_API_KEY`, `PORT`, `APPEND_SIGNATURE`, `APPEND_SIGNATURE_MODE`, `SIGNATURE`.
 
 ## Notas de comportamento
-- Fallback padrão: "Não entendi o nome do empreendimento ou o bairro..." pedindo nome/bairro + tipologia antes de listar opções.
+- Fallback padrão: "Perfeito. Para eu te direcionar com precisão, me diga, por favor, o nome do empreendimento ou o bairro com a tipologia (ex: studio, 2q, 3q, 4q). Assim, consigo te apresentar as opções mais adequadas dos empreendimentos. 😊" pedindo nome/bairro + tipologia antes de listar opções.
 - Assinatura só é anexada conforme heurística de fechamento (configurável via `.env`).

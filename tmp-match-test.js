@@ -84,7 +84,7 @@ function summarise(c) {
   return c.map((e) => ({ nome: e.nome, bairro: e.bairro, tipologia: e.tipologia || e.tipologias, entrega: e.entrega }));
 }
 
-['Marem', 'Pulse', 'Icaraí', 'Piratininga'].forEach((q) => {
+['Marem', 'Pulse', 'Icaraí', 'Piratininga', 'icarai 4 quartos'].forEach((q) => {
   const r = find(q);
   console.log('\nQuery:', q, 'Reason:', r.reason, 'Count:', r.list.length);
   console.log(JSON.stringify(summarise(r.list), null, 2));
