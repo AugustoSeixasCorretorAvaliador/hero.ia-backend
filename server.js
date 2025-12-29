@@ -47,6 +47,53 @@ function sanitize(text = "") {
     .trim();
 }
 
+/* ===============================
+   App & Middlewares
+================================ */
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+/* ===============================
+   OpenAI Client
+================================ */
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY
+});
+
+// ===============================
+// Aliases e utilidades de matching
+// ===============================
+const BAIRRO_ALIASES = {
+  badu: "pendotiba",
+  matapaca: "pendotiba",
+  "mata paca": "pendotiba",
+  "maria paula": "maria paula"
+};
+
+function hasTipologia(e, tipKeys) {
+  if (!tipKeys || tipKeys.length === 0) return false;
+  const tips = Array.isArray(e.tipologia)
+    ? e.tipologia
+    : Array.isArray(e.tipologias)
+    ? e.tipologias
+    : [e.tipologia || e.tipologias || ""];
+  const normTips = tips.map((t) => norm(t || ""));
+  const normKeys = tipKeys.map((t) => norm(t || ""));
+  return normKeys.some((t) => normTips.includes(t));
+}
+
+function extractTipKeys(msgNorm) {
+  const keys = [];
+  if (/\b(studio|studios)\b/.test(msgNorm)) keys.push("studio");
+  if (/\bloft\b/.test(msgNorm)) keys.push("loft");
+  if (/(1\s*q(uarto)?s?|1\s*qts?|1\s*dorm(itorio)?s?|1\s*d)\b/.test(msgNorm)) keys.push("1q");
+  if (/(2\s*q(uarto)?s?|2\s*qts?|2\s*dorm(itorio)?s?|2\s*d)\b/.test(msgNorm)) keys.push("2q");
+  if (/(3\s*q(uarto)?s?|3\s*qts?|3\s*dorm(itorio)?s?|3\s*d)\b/.test(msgNorm)) keys.push("3q");
+  if (/(4\s*q(uarto)?s?|4\s*qts?|4\s*dorm(itorio)?s?|4\s*d)\b/.test(msgNorm)) keys.push("4q");
+  return keys;
+}
+
 // Cache leve para reutilizar o último resultado por remetente em mensagens curtas de intenção
 const sessionCache = new Map(); // senderId -> { candidates, expiresAt }
 
