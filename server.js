@@ -390,6 +390,7 @@ function buildDeterministicPayload(candidates) {
    Rota principal (GERAR RASCUNHO)
 ================================ */
 app.post("/whatsapp/draft", licenseMiddleware, async (req, res) => {
+  let workingCandidates = [];
   try {
     if (empreendimentosLoadError) {
       return res.status(503).json({ error: "Base de empreendimentos indisponível no momento" });
@@ -411,7 +412,7 @@ app.post("/whatsapp/draft", licenseMiddleware, async (req, res) => {
 
     const { list: candidates, reason, bairros, tipKeys, msgNorm } = findCandidates(msg);
     const intentOnly = isShortIntentOnly(msgNorm);
-    let workingCandidates = candidates;
+    workingCandidates = candidates;
 
     // Reutiliza últimos candidatos do remetente se a mensagem for só intenção e não houver match novo
     if ((!workingCandidates || workingCandidates.length === 0) && intentOnly && senderId) {
