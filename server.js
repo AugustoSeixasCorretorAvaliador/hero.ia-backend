@@ -310,16 +310,117 @@ function findCandidates(msg) {
   return { list: [], reason: "none", tipKeys, msgNorm };
 }
 
-function buildFallbackPayload() {
+function isRealEstateIntent(msgNorm = "") {
+  if (!msgNorm) return false;
+  const hasTip = extractTipKeys(msgNorm).length > 0;
+  const hints = [
+    "imovel",
+    "imoveis",
+    "imobiliario",
+    "imobiliaria",
+    "empreendimento",
+    "apart",
+    "apto",
+    "apartamento",
+    "casa",
+    "lote",
+    "cobertura",
+    "planta",
+    "lançamento",
+    "lancamento",
+    "obra",
+    "m2",
+    "m2",
+    "m quadrado",
+    "aluguel",
+    "venda",
+    "comprar",
+    "investir",
+    "condominio",
+    "condomínio"
+  ];
+  const hasHint = hints.some((k) => msgNorm.includes(k));
+  return hasTip || hasHint;
+}
+
+function buildFallbackPayload({ msg = "", msgNorm = "" } = {}) {
+  const normalized = msgNorm || norm(msg || "");
+  const concernTerms = [
+    "economia",
+    "crise",
+    "juros",
+    "taxa",
+    "taxas",
+    "inflacao",
+    "infla",
+    "medo",
+    "receio",
+    "incerteza",
+    "dolar",
+    "politica",
+    "eleicao",
+    "guerra"
+  ];
+  const hasConcern = concernTerms.some((t) => normalized.includes(t));
+  const concernLead = hasConcern ? "Entendi sua preocupação com a economia. " : "";
+
   return {
     resposta:
-      "Olá 👋, Para eu te direcionar com precisão, me diga, por favor, o nome do empreendimento ou o bairro com a tipologia (ex: studio, 2q, 3q, 4q). Assim, consigo te apresentar as opções mais adequadas dos empreendimentos. 😊",
+      `${concernLead}Olá 👋, Para eu te direcionar com precisão, me diga, por favor, o nome do empreendimento ou o bairro com a tipologia (ex: studio, 2q, 3q, 4q). Assim, consigo te apresentar as opções mais adequadas dos empreendimentos. Atuo apenas com os empreendimentos da base, mas posso te indicar opções nela. 😊`,
     followups: [
       "Pode me dizer agora o nome ou bairro e a tipologia (studio, 2q, 3q, 4q, Lotes)?",
       "Me passa o bairro favorito que eu puxo em segundos as opções certas.",
       "Se preferir, faço uma ligação rápida só para alinhar e enviar as opções ideais."
     ]
   };
+}
+
+async function buildSmalltalkPayload({ msg = "", msgNorm = "" } = {}) {
+  const system = [
+    "Você é Augusto Seixas- Corretor Spin, corretor consultivo em Niterói e Região Oceânica.",
+    "Pode conversar sobre qualquer assunto com empatia e brevidade (máx 2 frases).",
+    "Nunca sugira ou invente empreendimentos, bairros, tipologias, metragens ou datas.",
+    "Se o usuário pedir imóveis, peça o nome do empreendimento ou o bairro e a tipologia (ex: studio, 2q, 3q, 4q, lote) e avise que só trabalha com os empreendimentos da base fornecida.",
+    "Use um emoji na resposta."
+  ].join(" ");
+
+  const userContent = msg || "";
+
+  try {
+    const response = await openai.responses.create({
+      model: "gpt-4o-mini",
+      input: [
+        { role: "system", content: system },
+        { role: "user", content: userContent }
+      ],
+      max_output_tokens: 200,
+      temperature: 0.4,
+      top_p: 1
+    });
+
+    const text =
+      response.output_text ||
+      response.output?.[0]?.content?.[0]?.text ||
+      "Posso te ajudar com isso. Quando quiser falar de imóveis, me diga nome ou bairro e a tipologia (studio, 2q, 3q, 4q, lote) que eu consulto na base. 🙂";
+
+    return {
+      resposta: String(text).trim(),
+      followups: [
+        "Quando quiser ver opções de imóveis, me diz nome ou bairro e tipologia que eu consulto na base.",
+        "Se preferir, me fala o bairro favorito que eu trago as opções certas da base."
+      ]
+    };
+  } catch (err) {
+    console.error("OpenAI smalltalk error:", err?.response?.data || err.message);
+    return {
+      resposta:
+        "Posso te ajudar com esse assunto. Quando quiser falar de imóveis, me diga nome ou bairro e a tipologia (studio, 2q, 3q, 4q, lote) que eu consulto na base. 🙂",
+      followups: [
+        "Se quiser, me passa o bairro favorito que eu puxo as opções certas da base.",
+        "Me fala nome ou bairro e tipologia que eu listo os empreendimentos da base."
+      ]
+    };
+  }
 }
 
 function buildDeterministicPayload(candidates) {
@@ -413,7 +514,10 @@ app.post("/whatsapp/draft", licenseMiddleware, async (req, res) => {
     console.log("[findCandidates]", logPayload);
 
     if (!candidates || candidates.length === 0) {
-      const payload = buildFallbackPayload();
+      const isImobIntent = isRealEstateIntent(msgNorm);
+      const payload = isImobIntent
+        ? buildFallbackPayload({ msg, msgNorm })
+        : await buildSmalltalkPayload({ msg, msgNorm });
       return res.json({ draft: JSON.stringify(payload, null, 0) });
     }
 
@@ -474,7 +578,7 @@ app.post("/whatsapp/draft", licenseMiddleware, async (req, res) => {
     }
 
     if (!payload) {
-      payload = buildDeterministicPayload(candidates) || buildFallbackPayload();
+      payload = buildDeterministicPayload(candidates) || buildFallbackPayload({ msg, msgNorm });
     }
 
     payload.resposta = removeAISignature(payload.resposta || "");
