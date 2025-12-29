@@ -1881,19 +1881,5 @@
     ],
     "descricao": "Conviva | Rua Antonio Cotta, 28 | Entrega: 2028",
     "entrega": "2028"
-  },
-  {
-    "nome": "Maren By RAMABE",
-    "bairro": "Piratininga",
-    "tipologia": [
-      "1q",
-      "2q"
-    ],
-    "perfil": [
-      "moradia",
-      "investimento"
-    ],
-    "descricao": "RAMABE | Piratininga | Entrega: 2028",
-    "entrega": "2028"
   }
 ]
