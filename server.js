@@ -520,7 +520,8 @@ app.post("/whatsapp/draft", licenseMiddleware, async (req, res) => {
   } catch (err) {
     console.error("ERROR /whatsapp/draft:", err?.response?.data || err);
     try {
-      const fallback = buildDeterministicPayload(empreendimentos || []) || buildFallbackPayload();
+      const safeList = Array.isArray(workingCandidates) && workingCandidates.length > 0 ? workingCandidates : empreendimentos || [];
+      const fallback = buildDeterministicPayload(safeList) || buildFallbackPayload();
       return res.json({ draft: JSON.stringify(fallback, null, 0) });
     } catch (err2) {
       console.error("ERROR /whatsapp/draft (secondary):", err2?.response?.data || err2);
