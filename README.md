@@ -29,3 +29,4 @@
 ## Notas de comportamento
 - Fallback padrão: "Perfeito. Para eu te direcionar com precisão, me diga, por favor, o nome do empreendimento ou o bairro com a tipologia (ex: studio, 2q, 3q, 4q). Assim, consigo te apresentar as opções mais adequadas dos empreendimentos. 😊" pedindo nome/bairro + tipologia antes de listar opções.
 - Assinatura só é anexada conforme heurística de fechamento (configurável via `.env`).
+- Status em 2025-12-29: fluxo operacional 100% e respostas assertivas usando exclusivamente a base data/empreendimentos.json; smalltalk responde com empatia sem sugerir empreendimentos fora da base.

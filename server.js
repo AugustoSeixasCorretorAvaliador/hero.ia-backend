@@ -465,9 +465,7 @@ function buildDeterministicPayload(candidates) {
     "",
     "",
     "Se preferir, te envio E-Book e já podemos agendar uma ligação rápida ou por vídeo, explico melhor o projeto e combinamos uma visita para escolher a unidade mais adequada ao seu perfil. Seu interesse seria para moradia ou investimento? 🙂"
-  ]
-    .filter(Boolean)
-    .join("\n");
+  ].join("\n");
 
   return {
     resposta: lead,
