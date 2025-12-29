@@ -29,6 +29,8 @@ const SIGNATURE = (process.env.SIGNATURE || DEFAULT_SIGNATURE).replace(/\\n/g, "
 
 // Modo de anexação: 'closing' (padrão), 'always' ou 'never'
 const APPEND_SIGNATURE_MODE = String(process.env.APPEND_SIGNATURE_MODE || "closing").toLowerCase();
+const ENABLE_INTENT_CACHE = String(process.env.ENABLE_INTENT_CACHE || "true").toLowerCase() === "true";
+const INTENT_CACHE_TTL_MS = Number(process.env.INTENT_CACHE_TTL_MS || 15 * 60 * 1000);
 
 function maskKey(key = "") {
   if (typeof key !== "string" || key.length === 0) return "<empty>";
@@ -45,99 +47,41 @@ function sanitize(text = "") {
     .trim();
 }
 
-function isUserClosing(text = "") {
-  const t = sanitize(text);
-  const patterns = [
-    "obrigado",
-    "obrigada",
-    "valeu",
-    "vou pensar",
-    "vou avaliar",
-    "vou considerar",
-    "depois te falo",
-    "te retorno",
-    "mais tarde",
-    "te chamo",
-    "te aviso",
-    "por enquanto nao",
-    "agora nao",
-    "ate mais",
-    "ate breve",
-    "boa noite",
-    "bom dia",
-    "boa tarde"
-  ];
-  return patterns.some((p) => t.includes(p));
+// Cache leve para reutilizar o último resultado por remetente em mensagens curtas de intenção
+const sessionCache = new Map(); // senderId -> { candidates, expiresAt }
+
+function setCache(senderId, candidates) {
+  if (!ENABLE_INTENT_CACHE) return;
+  if (!senderId || !Array.isArray(candidates) || candidates.length === 0) return;
+  sessionCache.set(senderId, { candidates, expiresAt: Date.now() + INTENT_CACHE_TTL_MS });
 }
 
-function isResponseClosing(text = "") {
-  const t = sanitize(text);
-  const patterns = [
-    "de nada",
-    "estou aqui para ajudar",
-    "se precisar",
-    "e so me avisar",
-    "se precisar de mais informacoes",
-    "qualquer duvida",
-    "fico a disposicao",
-    "fico a sua disposicao",
-    "ate breve",
-    "ate logo"
-  ];
-  return patterns.some((p) => t.includes(p));
+function getCache(senderId) {
+  if (!ENABLE_INTENT_CACHE) return null;
+  if (!senderId) return null;
+  const entry = sessionCache.get(senderId);
+  if (!entry) return null;
+  if (entry.expiresAt < Date.now()) {
+    sessionCache.delete(senderId);
+    return null;
+  }
+  return entry.candidates;
 }
 
-function shouldAppendSignature({ mode, userText, aiText }) {
-  if (mode === "always") return true;
-  if (mode === "never") return false;
-  return isUserClosing(userText) || isResponseClosing(aiText);
-}
+function isShortIntentOnly(msgNorm) {
+  const tokens = msgNorm.split(/\s+/).filter(Boolean);
+  if (tokens.length === 0 || tokens.length > 12) return false;
 
-/* ===============================
-   App & Middlewares
-================================ */
-const app = express();
-app.use(cors());
-app.use(express.json());
+  const intentWords = ["moradia", "investimento", "investir", "invisto", "invista", "investidor"];
+  const followWords = ["ebook", "e-book", "e book", "pdf", "material", "catalogo"];
+  const contactWords = ["ligacao", "me liga", "liga", "call", "chamada", "video", "videochamada", "visita"];
 
-/* ===============================
-   OpenAI Client
-================================ */
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
-});
+  const hay = msgNorm;
+  const matchIntent = intentWords.some((w) => hay.includes(w));
+  const matchFollow = followWords.some((w) => hay.includes(w));
+  const matchContact = contactWords.some((w) => hay.includes(w));
 
-// ===============================
-// Aliases e utilidades de matching
-// ===============================
-const BAIRRO_ALIASES = {
-  badu: "pendotiba",
-  matapaca: "pendotiba",
-  "mata paca": "pendotiba",
-  "maria paula": "maria paula"
-};
-
-function hasTipologia(e, tipKeys) {
-  if (!tipKeys || tipKeys.length === 0) return false;
-  const tips = Array.isArray(e.tipologia)
-    ? e.tipologia
-    : Array.isArray(e.tipologias)
-    ? e.tipologias
-    : [e.tipologia || e.tipologias || ""];
-  const normTips = tips.map((t) => norm(t || ""));
-  const normKeys = tipKeys.map((t) => norm(t || ""));
-  return normKeys.some((t) => normTips.includes(t));
-}
-
-function extractTipKeys(msgNorm) {
-  const keys = [];
-  if (/\b(studio|studios)\b/.test(msgNorm)) keys.push("studio");
-  if (/\bloft\b/.test(msgNorm)) keys.push("loft");
-  if (/(1\s*q(uarto)?s?|1\s*qts?|1\s*dorm(itorio)?s?|1\s*d)\b/.test(msgNorm)) keys.push("1q");
-  if (/(2\s*q(uarto)?s?|2\s*qts?|2\s*dorm(itorio)?s?|2\s*d)\b/.test(msgNorm)) keys.push("2q");
-  if (/(3\s*q(uarto)?s?|3\s*qts?|3\s*dorm(itorio)?s?|3\s*d)\b/.test(msgNorm)) keys.push("3q");
-  if (/(4\s*q(uarto)?s?|4\s*qts?|4\s*dorm(itorio)?s?|4\s*d)\b/.test(msgNorm)) keys.push("4q");
-  return keys;
+  return matchIntent || matchFollow || matchContact;
 }
 
 function includesWord(haystack, term) {
@@ -385,7 +329,7 @@ app.post("/whatsapp/draft", licenseMiddleware, async (req, res) => {
       return res.status(503).json({ error: "Base de empreendimentos indisponível no momento" });
     }
 
-    let { mensagens, message } = req.body || {};
+    let { mensagens, message, senderId } = req.body || {};
 
     if (!mensagens && message) mensagens = [message];
 
@@ -400,22 +344,36 @@ app.post("/whatsapp/draft", licenseMiddleware, async (req, res) => {
     }
 
     const { list: candidates, reason, bairros, tipKeys, msgNorm } = findCandidates(msg);
+    const intentOnly = isShortIntentOnly(msgNorm);
+    let workingCandidates = candidates;
+
+    // Reutiliza últimos candidatos do remetente se a mensagem for só intenção e não houver match novo
+    if ((!workingCandidates || workingCandidates.length === 0) && intentOnly && senderId) {
+      const cached = getCache(senderId);
+      if (Array.isArray(cached) && cached.length > 0) {
+        workingCandidates = cached;
+        console.log("[findCandidates] reutilizando candidatos do cache para sender", senderId);
+      }
+    }
+
     const logPayload = {
       reason,
       bairros,
       tipKeys,
       msgNorm,
-      total: candidates?.length,
-      sample: (candidates || []).slice(0, 5).map((e) => ({ nome: e.nome, bairro: e.bairro, tipologia: e.tipologia || e.tipologias }))
+      intentOnly,
+      fromCache: workingCandidates !== candidates,
+      total: (workingCandidates || []).length,
+      sample: (workingCandidates || []).slice(0, 5).map((e) => ({ nome: e.nome, bairro: e.bairro, tipologia: e.tipologia || e.tipologias }))
     };
     console.log("[findCandidates]", logPayload);
 
-    if (!candidates || candidates.length === 0) {
+    if (!workingCandidates || workingCandidates.length === 0) {
       const payload = buildFallbackPayload();
       return res.json({ draft: JSON.stringify(payload, null, 0) });
     }
 
-    const prompt = buildPromptForMessage({ mensagem: msg, empreendimentos: candidates });
+    const prompt = buildPromptForMessage({ mensagem: msg, empreendimentos: workingCandidates });
 
     let payload = null;
 
@@ -472,7 +430,12 @@ app.post("/whatsapp/draft", licenseMiddleware, async (req, res) => {
     }
 
     if (!payload) {
-      payload = buildDeterministicPayload(candidates) || buildFallbackPayload();
+      payload = buildDeterministicPayload(workingCandidates) || buildFallbackPayload();
+    }
+
+    // Guarda cache do último conjunto de candidatos para este sender (quando informado)
+    if (senderId && workingCandidates && workingCandidates.length > 0) {
+      setCache(senderId, workingCandidates);
     }
 
     payload.resposta = removeAISignature(payload.resposta || "");
