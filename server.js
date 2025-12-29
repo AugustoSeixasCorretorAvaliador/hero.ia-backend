@@ -451,7 +451,7 @@ app.post("/whatsapp/draft", licenseMiddleware, async (req, res) => {
         // continua para fallback
       }
     } catch (errCall) {
-      console.error("OpenAI error:", errCall?.response?.data || errCall.message);
+      console.error("OpenAI error:", errCall?.response?.data || errCall);
     }
 
     function removeAISignature(text) {
@@ -499,8 +499,14 @@ app.post("/whatsapp/draft", licenseMiddleware, async (req, res) => {
 
     return res.json({ draft: JSON.stringify(payload, null, 0) });
   } catch (err) {
-    console.error("ERROR /whatsapp/draft:", err?.response?.data || err.message);
-    return res.status(500).json({ error: "Erro ao gerar rascunho" });
+    console.error("ERROR /whatsapp/draft:", err?.response?.data || err);
+    try {
+      const fallback = buildDeterministicPayload(empreendimentos || []) || buildFallbackPayload();
+      return res.json({ draft: JSON.stringify(fallback, null, 0) });
+    } catch (err2) {
+      console.error("ERROR /whatsapp/draft (secondary):", err2?.response?.data || err2);
+      return res.status(500).json({ error: "Erro ao gerar rascunho" });
+    }
   }
 });
 
