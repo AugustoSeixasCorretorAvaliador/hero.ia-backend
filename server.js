@@ -313,7 +313,7 @@ function findCandidates(msg) {
 function buildFallbackPayload() {
   return {
     resposta:
-      "Perfeito. Para eu te direcionar com precisão, me diga, por favor, o nome do empreendimento ou o bairro com a tipologia (ex: studio, 2q, 3q, 4q). Assim, consigo te apresentar as opções mais adequadas dos empreendimentos. 😊",
+      "Olá 👋, Para eu te direcionar com precisão, me diga, por favor, o nome do empreendimento ou o bairro com a tipologia (ex: studio, 2q, 3q, 4q). Assim, consigo te apresentar as opções mais adequadas dos empreendimentos. 😊",
     followups: [
       "Pode me dizer agora o nome ou bairro e a tipologia (studio, 2q, 3q, 4q)?",
       "Me passa o bairro favorito que eu puxo em segundos as opções certas.",
