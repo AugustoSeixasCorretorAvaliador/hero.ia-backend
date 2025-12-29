@@ -315,7 +315,7 @@ function buildFallbackPayload() {
     resposta:
       "Olá 👋, Para eu te direcionar com precisão, me diga, por favor, o nome do empreendimento ou o bairro com a tipologia (ex: studio, 2q, 3q, 4q). Assim, consigo te apresentar as opções mais adequadas dos empreendimentos. 😊",
     followups: [
-      "Pode me dizer agora o nome ou bairro e a tipologia (studio, 2q, 3q, 4q)?",
+      "Pode me dizer agora o nome ou bairro e a tipologia (studio, 2q, 3q, 4q, Lotes)?",
       "Me passa o bairro favorito que eu puxo em segundos as opções certas.",
       "Se preferir, faço uma ligação rápida só para alinhar e enviar as opções ideais."
     ]
@@ -359,7 +359,9 @@ function buildDeterministicPayload(candidates) {
   const lead = [
     "Perfeito. Seguem as informações:",
     "",
+    "",
     blocks.join("\n\n"),
+    "",
     "",
     "Se preferir, te envio E-Book e já podemos agendar uma ligação rápida ou por vídeo, explico melhor o projeto e combinamos uma visita para escolher a unidade mais adequada ao seu perfil. Seu interesse seria para moradia ou investimento? 🙂"
   ]
