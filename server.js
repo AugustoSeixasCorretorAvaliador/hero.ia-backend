@@ -32,6 +32,25 @@ const APPEND_SIGNATURE_MODE = String(process.env.APPEND_SIGNATURE_MODE || "closi
 const ENABLE_INTENT_CACHE = String(process.env.ENABLE_INTENT_CACHE || "true").toLowerCase() === "true";
 const INTENT_CACHE_TTL_MS = Number(process.env.INTENT_CACHE_TTL_MS || 15 * 60 * 1000);
 
+function hasSignature(text = "") {
+  const t = text.toLowerCase();
+  return t.includes("augusto seixas") || t.includes("creci-rj") || t.includes("spinvendas.com");
+}
+
+// Decide quando anexar a assinatura para evitar ReferenceError
+function shouldAppendSignature({ mode = "closing", userText = "", aiText = "" }) {
+  const normalized = (aiText || "").trim();
+  if (!normalized) return false;
+
+  if (mode === "never") return false;
+  if (hasSignature(normalized)) return false;
+  if (mode === "always") return true;
+
+  // closing: só anexa se a resposta não terminar em pergunta, indicando fechamento
+  const endsWithQuestion = normalized.endsWith("?");
+  return !endsWithQuestion;
+}
+
 function maskKey(key = "") {
   if (typeof key !== "string" || key.length === 0) return "<empty>";
   if (key.length <= 6) return `${key[0]}***${key[key.length - 1]}`;
