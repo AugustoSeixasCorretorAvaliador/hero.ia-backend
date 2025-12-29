@@ -440,6 +440,28 @@ app.post("/whatsapp/draft", licenseMiddleware, async (req, res) => {
       return res.json({ draft: JSON.stringify(payload, null, 0) });
     }
 
+    // Saída determinística imediata (evita depender da LLM quando já temos match filtrado)
+    {
+      if (senderId && workingCandidates && workingCandidates.length > 0) {
+        setCache(senderId, workingCandidates);
+      }
+
+      let payload = buildDeterministicPayload(workingCandidates) || buildFallbackPayload();
+      payload.resposta = removeAISignature(payload.resposta || "");
+
+      if (APPEND_SIGNATURE && typeof payload.resposta === "string") {
+        const normalized = payload.resposta.trim();
+        const shouldAppend = shouldAppendSignature({
+          mode: APPEND_SIGNATURE_MODE,
+          userText: msg,
+          aiText: normalized
+        });
+        payload.resposta = shouldAppend ? `${normalized}\n\n${SIGNATURE}` : normalized;
+      }
+
+      return res.json({ draft: JSON.stringify(payload, null, 0) });
+    }
+
     const prompt = buildPromptForMessage({ mensagem: msg, empreendimentos: workingCandidates });
 
     let payload = null;
