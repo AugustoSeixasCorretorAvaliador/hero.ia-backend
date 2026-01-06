@@ -1,32 +1,129 @@
-# Backend – WhatsApp Draft API
+# HEROIA-FULL-Nuven
+Node.js Express backend com integração OpenAI para endpoints do WhatsApp.
+## Requisitos
+- Node.js 16+
+- OpenAI API Key
+## Instalação
+```bash
+npm install
+```
+## Configuração
+1. Copie `.env.example` para `.env`:
+```bash
+cp .env.example .env
+```
+2. Configure as variáveis de ambiente no arquivo `.env`:
+- `OPENAI_API_KEY`: Sua chave da API OpenAI
+- `OPENAI_MODEL`: Modelo OpenAI a usar (padrão: gpt-4o-mini)
+- `SUPABASE_URL`: URL do projeto Supabase
+- `SUPABASE_SERVICE_ROLE_KEY`: Service role key do Supabase (usada apenas no backend)
+- `APP_REQUIRE_LICENSE`: Define se validação de licença é obrigatória (padrão: true)
+- `APPEND_SIGNATURE`: Define se deve adicionar assinatura às respostas (true/false)
+- `SIGNATURE`: Texto da assinatura a ser adicionado
+3. Licenciamento agora é centralizado no Supabase. Nenhum arquivo JSON local é usado para licenças.
+## Execução
+```bash
+node backend/server.js
+```
+O servidor inicia na porta 3002 por padrão (ou `PORT` no `.env`).
+## Endpoints
 
-## Fluxo de seleção (determinístico)
-- Critério: **bairro primeiro, depois nome**. Tipologia não filtra; só descreve.
-- Sem nome/bairro claro: não consulta base/LLM; responde fallback pedindo nome ou bairro e tipologia.
+### POST /api/license/activate
+Ativa ou valida uma licença centralizada no Supabase.
+- Body (PWA): `{ "license_key": "...", "email": "...", "device_id": "...", "notes": "PWA", "source": "PWA" }`
+- Body (Extensão Chrome): `{ "license_key": "...", "email": "...", "device_id": "...", "notes": "ECWW", "source": "ECWW" }`
+- O backend salva o campo notes (e utiliza source para diferenciar a origem). Outros campos como email, device_id, activated_at e last_used também são atualizados.
+- Respostas possíveis:
+  - 200 `{ "status": "active", "expires_at": "2026-01-04T00:00:00.000Z" }`
+  - 403/404 com `{ error: "motivo" }`
 
-## Endpoint principal
-- `POST /whatsapp/draft` (requer header `x-user-key` de licença) — gera rascunho via motor determinístico + LLM.
+### POST /whatsapp/draft
+Gera um rascunho de resposta para mensagem do WhatsApp.
+- Headers obrigatórios (se `APP_REQUIRE_LICENSE=true`):
+  - `x-license-key`: chave de licença
+  - `x-device-id`: device_id vinculado
+- Body: `{ "message": "Mensagem do cliente" }` ou `{ "mensagens": ["msg1", "msg2"] }`
+- Resposta: `{ "draft": "...", "followups": ["..."], "raw": {} }`
 
-## Endpoint interno de debug (sem licença, sem LLM)
-- `GET /debug/match?q=<texto>` — retorna razão do match, bairros detectados e lista de itens com nome/bairro/tipologia/entrega.
-- Exemplos rápidos:
-  - `/debug/match?q=Pulse` → deve trazer apenas Pulse by Soter.
-  - `/debug/match?q=Icarai` → retorna todos os empreendimentos de Icaraí.
-  - `/debug/match?q=Piratininga` → retorna todos de Piratininga.
-  - `/debug/match?q=quero%203q` → razão `none`, lista vazia (cai no fallback no fluxo normal).
+### POST /whatsapp/copilot
+Analisa mensagem e fornece análise, sugestão e rascunho.
+- Headers obrigatórios (se `APP_REQUIRE_LICENSE=true`): `x-license-key`, `x-device-id`
+- Body: `{ "messages": [{ "author": "cliente", "text": "..." }] }`
+- Resposta: `{ "analysis": "...", "suggestion": "...", "draft": "..." }`
 
-### Comandos de teste (localhost:3001)
-- `curl "http://localhost:3001/debug/match?q=Pulse"`
-- `curl "http://localhost:3001/debug/match?q=Icarai"`
-- `curl "http://localhost:3001/debug/match?q=Piratininga"`
-- `curl "http://localhost:3001/debug/match?q=quero%203q"`
+### GET /health
+Verifica status do servidor.
+- Resposta: `{ "ok": true, "license": true }`
 
-## Execução local
-- `npm install`
-- `npm start` (ou `node server.js`) — porta padrão `3001`.
-- Variáveis principais: `OPENAI_API_KEY`, `PORT`, `APPEND_SIGNATURE`, `APPEND_SIGNATURE_MODE`, `SIGNATURE`.
+### POST /admin/license
+Administra status da licença (fonte de verdade: coluna `status` em `licenses`).
+- Body: `{ "license_key": "...", "action": "active" | "blocked", "token": "..." }`
+- Header: `Content-Type: application/json`
+- Proteção simples por token: `ADMIN_TOKEN` (default `heroia_app_admin`). Defina no `.env`.
+- Atualiza `licenses.status` e registra evento em `license_activations`.
+- Resposta: `{ ok: true, license_key: "...", status: "active" | "blocked" }`
 
-## Notas de comportamento
-- Fallback padrão: "Perfeito. Para eu te direcionar com precisão, me diga, por favor, o nome do empreendimento ou o bairro com a tipologia (ex: studio, 2q, 3q, 4q). Assim, consigo te apresentar as opções mais adequadas dos empreendimentos. 😊" pedindo nome/bairro + tipologia antes de listar opções.
-- Assinatura só é anexada conforme heurística de fechamento (configurável via `.env`).
-- Status em 2025-12-29: fluxo operacional 100% e respostas assertivas usando exclusivamente a base data/empreendimentos.json; smalltalk responde com empatia sem sugerir empreendimentos fora da base.
+## 🌐 Deploy no Render
+
+1. Conecte seu repositório ao Render
+2. Configure as variáveis de ambiente:
+   - `PORT` (Render define automaticamente)
+   - `NODE_ENV=production`
+3. O Render executará automaticamente `npm install` e `npm start`
+
+### Configurações do Render:
+- **Build Command:** `npm install`
+- **Start Command:** `npm start`
+- **Environment:** Node
+- **Node Version:** 14 ou superior
+
+## 🔧 Integração com Extensão
+
+A extensão de navegador deve fazer requisições POST para os endpoints:
+
+```javascript
+const headers = {
+  'Content-Type': 'application/json',
+  'x-license-key': activation.license_key,
+  'x-device-id': activation.device_id
+};
+
+fetch('https://seu-app.render.com/whatsapp/draft', {
+  method: 'POST',
+  headers,
+  body: JSON.stringify({ message })
+});
+
+fetch('https://seu-app.render.com/whatsapp/copilot', {
+  method: 'POST',
+  headers,
+  body: JSON.stringify({ messages })
+});
+```
+
+## 📦 Dependências
+
+- **express**: Framework web para Node.js
+- **dotenv**: Carregamento de variáveis de ambiente
+- **cors**: Habilitação de CORS para requisições cross-origin
+- **openai**: Cliente OpenAI v4
+
+## 🖥️ Painel Admin (HTML)
+
+- Arquivo: `heroia_app_admin/index.html`
+- Aponta por padrão para `http://localhost:3002/admin/license`.
+- Preencha License Key e o `ADMIN_TOKEN` (mesmo valor definido no backend). Botões “Ativar” e “Bloquear” enviam para o endpoint e exibem o status retornado.
+
+## 🛡️ Segurança
+
+- Tratamento de erros não capturados
+- Validação básica de entrada
+- CORS configurado
+- Logs de requisições para debug
+
+## Estrutura de Arquivos
+
+- `backend/server.js`: Servidor Express principal
+- `backend/data/empreendimentos.json`: Dados dos empreendimentos
+- `.env`: Variáveis de ambiente (não versionado)
+- `.env.example`: Exemplo de configuração
