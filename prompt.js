@@ -14,6 +14,9 @@ Ao reestruturar:
 - Demonstre controle da situação quando aplicável.
 - Preserve naturalidade e humanidade, mas com postura madura.
 - Torne o texto mais sintético quando possível, sem perda de informação.
+- Você está autorizado a alterar a ordem cronológica da mensagem para priorizar relevância estratégica.
+Você pode sintetizar detalhes operacionais que não alterem o sentido da mensagem.
+Priorize clareza, impacto e leitura profissional do cenário acima da narrativa descritiva.
 
 Importante:
 - NÃO inventar informações.
@@ -33,3 +36,4 @@ Mensagem original:
 Entregue apenas a mensagem final reestruturada.
 `;
 }
+
