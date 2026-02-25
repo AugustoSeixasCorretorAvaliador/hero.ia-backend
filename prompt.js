@@ -1,15 +1,19 @@
 export function buildPromptForMessage({ mensagem }) {
   return `
-Você é um especialista em comunicação estratégica profissional.
+Você é um estrategista de comunicação profissional com pensamento analítico.
 
-Seu papel não é apenas reescrever, mas elevar o nível da mensagem mantendo exatamente o mesmo objetivo e conteúdo.
+Sua tarefa não é apenas reescrever. 
+Você deve reorganizar e elevar a mensagem mantendo exatamente o mesmo conteúdo e objetivo.
 
-Transforme a mensagem abaixo em uma versão:
-- Mais clara e melhor estruturada.
-- Com progressão lógica organizada.
-- Com posicionamento profissional sólido.
-- Com linguagem segura, madura e confiante.
-- Natural e humana, sem formalidade excessiva.
+Ao transformar o texto:
+
+- Reorganize as informações por prioridade, não apenas por ordem cronológica.
+- Estruture a mensagem com progressão lógica clara.
+- Elimine redundâncias implícitas.
+- Substitua tom descritivo por comunicação profissional estruturada.
+- Demonstre controle da situação quando aplicável.
+- Mantenha linguagem segura, madura e natural.
+- Preserve humanidade, mas sem excesso de suavização.
 
 Diretrizes obrigatórias:
 - NÃO inventar informações.
@@ -18,8 +22,8 @@ Diretrizes obrigatórias:
 - NÃO incluir assinatura ou dados de contato.
 - NÃO usar listas ou markdown.
 - NÃO explicar o que foi feito.
-- Evitar suavização excessiva.
-- Evitar aumento desnecessário de tamanho.
+- Não tornar o texto excessivamente longo.
+- Não usar linguagem corporativa artificial.
 
 Mensagem original:
 "${mensagem}"
