@@ -11,16 +11,23 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 const PORT = Number(process.env.PORT || 3002);
 const MODEL = process.env.OPENAI_MODEL || "gpt-4.1";
+const TEMPERATURE = Number(process.env.OPENAI_TEMPERATURE || 0.2);
+const TOP_P = Number(process.env.OPENAI_TOP_P || 0.9);
 
 // ===============================
 // HEALTH
 // ===============================
 app.get("/health", (_req, res) => {
-  res.json({ ok: true, mode: "rewrite-only" });
+  res.json({
+    ok: true,
+    mode: "rewrite-premium",
+    model: MODEL,
+    temperature: TEMPERATURE
+  });
 });
 
 // ===============================
-// ROTA COMPATÍVEL COM PWA
+// WHATSAPP REFINE (LAPIDADOR)
 // ===============================
 app.post("/whatsapp/draft", async (req, res) => {
   try {
@@ -38,42 +45,49 @@ app.post("/whatsapp/draft", async (req, res) => {
       return res.status(400).json({ error: "Mensagem inválida" });
     }
 
-    const prompt = `
-Você é um especialista em comunicação estratégica no contexto de vendas consultivas.
-
-Refine a mensagem abaixo mantendo exatamente a intenção original, mas tornando-a:
-
-- Mais clara
-- Mais organizada
-- Mais fluida
-- Mais profissional
-- Mais estratégica
-
-Regras obrigatórias:
-- Não inventar informações.
-- Não adicionar dados novos.
-- Não incluir assinatura ou dados de contato.
-- Não usar listas ou markdown.
-- Não explicar o que fez.
-- Entregar apenas a mensagem final reescrita.
-
-Mensagem original:
-"${msg}"
-`;
-
     const response = await openai.chat.completions.create({
       model: MODEL,
-      temperature: 0.4,
+      temperature: TEMPERATURE,
+      top_p: TOP_P,
       messages: [
-        { role: "system", content: prompt },
-        { role: "user", content: msg }
+        {
+          role: "system",
+          content: `
+Você é um especialista em comunicação estratégica profissional.
+
+Seu papel não é apenas reescrever, mas elevar o nível da mensagem mantendo exatamente o mesmo objetivo e conteúdo.
+
+Transforme a mensagem recebida em uma versão:
+- Mais clara e melhor estruturada.
+- Com progressão lógica organizada.
+- Com posicionamento profissional sólido.
+- Com linguagem segura, madura e confiante.
+- Natural e humana, sem formalidade excessiva.
+
+Diretrizes obrigatórias:
+- NÃO inventar informações.
+- NÃO adicionar dados novos.
+- NÃO alterar o objetivo.
+- NÃO incluir assinatura ou dados de contato.
+- NÃO usar listas ou markdown.
+- NÃO explicar o que foi feito.
+- Evitar suavização excessiva.
+- Evitar aumento desnecessário de tamanho.
+
+Entregue apenas a mensagem final reescrita.
+`
+        },
+        {
+          role: "user",
+          content: msg
+        }
       ]
     });
 
     const refined = response.choices?.[0]?.message?.content?.trim();
 
     if (!refined) {
-      return res.status(500).json({ error: "Não consegui gerar o rascunho." });
+      return res.status(500).json({ error: "Não consegui gerar a resposta." });
     }
 
     return res.json({
@@ -87,9 +101,10 @@ Mensagem original:
 });
 
 // ===============================
-app.get("/", (_req, res) => res.send("HERO Rewrite backend OK"));
+app.get("/", (_req, res) => {
+  res.send("HERO Rewrite Premium backend OK");
+});
 
 app.listen(PORT, () => {
   console.log(`Rewrite backend rodando em http://localhost:${PORT}`);
 });
-
