@@ -2,12 +2,16 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import OpenAI from "openai";
+import { buildPromptForMessage } from "./prompt.js";
 
 const app = express();
+
 app.use(cors());
 app.use(express.json({ limit: "200kb" }));
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY
+});
 
 const PORT = Number(process.env.PORT || 3002);
 const MODEL = process.env.OPENAI_MODEL || "gpt-4.1";
@@ -22,7 +26,8 @@ app.get("/health", (_req, res) => {
     ok: true,
     mode: "rewrite-premium",
     model: MODEL,
-    temperature: TEMPERATURE
+    temperature: TEMPERATURE,
+    top_p: TOP_P
   });
 });
 
@@ -33,17 +38,29 @@ app.post("/whatsapp/draft", async (req, res) => {
   try {
     let { mensagens, message } = req.body || {};
 
-    if (!mensagens && message) mensagens = [message];
-    if (!mensagens) {
-      return res.status(400).json({ error: "Campo 'mensagens' é obrigatório" });
+    if (!mensagens && message) {
+      mensagens = [message];
     }
 
-    if (!Array.isArray(mensagens)) mensagens = [mensagens];
+    if (!mensagens) {
+      return res.status(400).json({
+        error: "Campo 'mensagens' é obrigatório"
+      });
+    }
+
+    if (!Array.isArray(mensagens)) {
+      mensagens = [mensagens];
+    }
 
     const msg = mensagens[mensagens.length - 1];
+
     if (!msg || typeof msg !== "string") {
-      return res.status(400).json({ error: "Mensagem inválida" });
+      return res.status(400).json({
+        error: "Mensagem inválida"
+      });
     }
+
+    const prompt = buildPromptForMessage({ mensagem: msg });
 
     const response = await openai.chat.completions.create({
       model: MODEL,
@@ -52,34 +69,7 @@ app.post("/whatsapp/draft", async (req, res) => {
       messages: [
         {
           role: "system",
-          content: `
-Você é um especialista em comunicação estratégica profissional.
-
-Seu papel não é apenas reescrever, mas elevar o nível da mensagem mantendo exatamente o mesmo objetivo e conteúdo.
-
-Transforme a mensagem recebida em uma versão:
-- Mais clara e melhor estruturada.
-- Com progressão lógica organizada.
-- Com posicionamento profissional sólido.
-- Com linguagem segura, madura e confiante.
-- Natural e humana, sem formalidade excessiva.
-
-Diretrizes obrigatórias:
-- NÃO inventar informações.
-- NÃO adicionar dados novos.
-- NÃO alterar o objetivo.
-- NÃO incluir assinatura ou dados de contato.
-- NÃO usar listas ou markdown.
-- NÃO explicar o que foi feito.
-- Evitar suavização excessiva.
-- Evitar aumento desnecessário de tamanho.
-
-Entregue apenas a mensagem final reescrita.
-`
-        },
-        {
-          role: "user",
-          content: msg
+          content: prompt
         }
       ]
     });
@@ -87,7 +77,9 @@ Entregue apenas a mensagem final reescrita.
     const refined = response.choices?.[0]?.message?.content?.trim();
 
     if (!refined) {
-      return res.status(500).json({ error: "Não consegui gerar a resposta." });
+      return res.status(500).json({
+        error: "Não consegui gerar a resposta."
+      });
     }
 
     return res.json({
@@ -95,8 +87,11 @@ Entregue apenas a mensagem final reescrita.
     });
 
   } catch (err) {
-    console.error("/whatsapp/draft error", err?.response?.data || err.message || err);
-    return res.status(500).json({ error: "Erro ao gerar rascunho" });
+    console.error("/whatsapp/draft error:", err?.response?.data || err.message || err);
+
+    return res.status(500).json({
+      error: "Erro ao gerar rascunho"
+    });
   }
 });
 
@@ -105,6 +100,7 @@ app.get("/", (_req, res) => {
   res.send("HERO Rewrite Premium backend OK");
 });
 
+// ===============================
 app.listen(PORT, () => {
   console.log(`Rewrite backend rodando em http://localhost:${PORT}`);
 });
