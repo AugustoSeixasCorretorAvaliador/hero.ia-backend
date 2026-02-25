@@ -10,7 +10,7 @@ app.use(express.json({ limit: "200kb" }));
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 const PORT = Number(process.env.PORT || 3002);
-const MODEL = process.env.OPENAI_MODEL || "gpt-4o-mini";
+const MODEL = process.env.OPENAI_MODEL || "gpt-4.1";
 
 // ===============================
 // HEALTH
@@ -92,3 +92,4 @@ app.get("/", (_req, res) => res.send("HERO Rewrite backend OK"));
 app.listen(PORT, () => {
   console.log(`Rewrite backend rodando em http://localhost:${PORT}`);
 });
+
