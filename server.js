@@ -34,7 +34,7 @@ app.get("/health", (_req, res) => {
 // ===============================
 // WHATSAPP REFINE (LAPIDADOR)
 // ===============================
-app.post("/whatsapp/draft", async (req, res) => {
+app.post("/whatsapp/refine", async (req, res) => {
   try {
     let { mensagens, message } = req.body || {};
 
@@ -83,11 +83,11 @@ app.post("/whatsapp/draft", async (req, res) => {
     }
 
     return res.json({
-      draft: refined
+      refine: refined
     });
 
   } catch (err) {
-    console.error("/whatsapp/draft error:", err?.response?.data || err.message || err);
+    console.error("/whatsapp/refine error:", err?.response?.data || err.message || err);
 
     return res.status(500).json({
       error: "Erro ao gerar rascunho"
@@ -104,3 +104,4 @@ app.get("/", (_req, res) => {
 app.listen(PORT, () => {
   console.log(`Rewrite backend rodando em http://localhost:${PORT}`);
 });
+
